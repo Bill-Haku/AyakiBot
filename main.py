@@ -11,13 +11,25 @@ access_secret = "QSGtIVUIsITWKxLX"
 
 token = qqbot.Token(appid, access_token)
 
+# 群中被at的回复
 def _at_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
     # 打印返回信息
-    qqbot.logger.info("event %s" % event + ",receive message %s" % message.content)
+    qqbot.logger.info("event %s" % event + ",receive at message %s" % message.content)
     hello_message.content = "Hello %s! My name is Ayaki!" % (message.author.username)
+    hello_message.msg_id = message.id
     msg_api = qqbot.MessageAPI(token, False)
-    msg_api.post_message(test_channel_id, hello_message)
+    msg_api.post_message(message.channel_id, hello_message)
+
+# 私信回复
+def _direct_message_handler(event, message: Message):
+    hello_message = MessageSendRequest()
+    # 打印返回信息
+    qqbot.logger.info("event %s" % event + ",receive direct message %s" % message.content)
+    hello_message.content = "Hello %s! My name is Ayaki!" % (message.author.username)
+    hello_message.msg_id = message.id
+    dms_api = qqbot.DmsAPI(token, False)
+    dms_api.post_direct_message(message.guild_id, hello_message)
 
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
@@ -34,4 +46,6 @@ if __name__ == '__main__':
         print(channel.id + " " + channel.name)
 
     ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
+    ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
     qqbot.listen_events(token, False, ayaki_at_message_handler)
+    qqbot.listen_events(token, False, ayaki_direct_message_handler)
