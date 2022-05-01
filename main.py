@@ -69,19 +69,47 @@ def _at_message_handler(event, message: Message):
         else:
             hello_message.content = "对不起，你是个好人。"
     elif message.content.find("sese") != -1:
-        contents = message.content.split(' ')
-        if contents[-1].isnumeric():
-            rangemin = int(contents[-1])
-            for i in range(rangemin, rangemin + 4):
-                try:
-                    return_url = _get_pixiv_image(i)
-                    # hello_message.content = "Origin: %s" % return_url
-                    hello_message.image = return_url
-                    break
-                except:
-                    qqbot.logger.info("get pixiv fail")
-        else:
-            hello_message.content = "未指定序号或序号不合法"
+        try:
+            newlines = []
+            havesent = False
+            with open("pixiv_src.csv", "r") as img_src_file:
+                for line in img_src_file.readlines():
+                    if line == "":
+                        continue
+                    if not havesent:
+                        values = line.split(',')
+                        img_id = values[0]
+                        img_origin_url = values[1]
+                        img_url = values[2]
+                        have_used = int(values[3])
+                        if have_used == 1:
+                            newlines.append(line)
+                            continue
+                        hello_message.content = "PID: " + img_id
+                        if img_url != img_origin_url:
+                            hello_message.content += "(原图由于过大已被压缩过)"
+                        hello_message.image = img_url
+                        print("sent image %s" % img_id)
+                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1\n"
+                        newlines.append(new_csv_info)
+                        havesent = True
+                    else:
+                        newlines.append(line)
+
+                if not havesent:
+                    hello_message.content = "图库已用尽，请联系@水里的碳酸钙"
+
+            # 写回新的资源表
+            with open("pixiv_src.csv", "w") as write_src_file:
+                for newline in newlines:
+                    # print(newline)
+                    write_src_file.write(newline)
+
+        except Exception as err:
+            hello_message.content = "获取图片失败" + err
+            qqbot.logger.info("get image fail")
+            qqbot.logger.info(err)
+
     else:
         hello_message.content = "你好%s! 我是Ayaki，请多指教了哦!" % (message.author.username)
         hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
@@ -116,13 +144,6 @@ if __name__ == '__main__':
     channels = channelApi.get_channels(guildid)
     for channel in channels:
         print(channel.id + " " + channel.name)
-
-    # for i in range(0, 10):
-    #     try:
-    #         _get_pixiv_image(i)
-    #         break
-    #     except:
-    #         qqbot.logger.info("get pixiv fail")
 
     ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
     ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
