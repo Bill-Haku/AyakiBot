@@ -14,7 +14,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.1.0"
+robot_version = "3.1.2"
 
 token = qqbot.Token(appid, access_token)
 
@@ -77,9 +77,10 @@ def _at_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
     # 打印返回信息
     qqbot.logger.info(
-        "event %s" % event + ", receive at message %s" % message.content + ", came from %s" % message.author.username)
+        "event %s" % event + ", receive at message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
 
     if message.content.find("爱你") != -1 or message.content.find("love you") != -1:
+        qqbot.logger.info("Recognized command love you")
         if message.author.username == "水里的碳酸钙":
             hello_message.content = "我也爱你哦"
         else:
@@ -87,6 +88,7 @@ def _at_message_handler(event, message: Message):
 
     # 发送一张图库的图片
     elif message.content.find("sese") != -1:
+        qqbot.logger.info("Recognized command sese")
         try:
             newlines = []
             havesent = False
@@ -111,10 +113,12 @@ def _at_message_handler(event, message: Message):
                         new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1\n"
                         newlines.append(new_csv_info)
                         havesent = True
+                        qqbot.logger.info("Found available image")
                     else:
                         newlines.append(line)
 
                 if not havesent:
+                    qqbot.logger.warning("Sese image database found empty")
                     hello_message.content = "图库已用尽，请联系@水里的碳酸钙"
 
             # 写回新的资源表
@@ -125,23 +129,31 @@ def _at_message_handler(event, message: Message):
 
         except Exception as err:
             hello_message.content = "获取图片失败, " + err
-            qqbot.logger.info("get image fail")
-            qqbot.logger.info(err)
+            qqbot.logger.info("Get sese image fail: %s" % str(err))
 
     # 获取图库剩余图片
     elif message.content.find("seremain") != -1:
+        qqbot.logger.info("Recognized command seremain")
         remain = _get_seremain()
         if remain >= 0:
-            hello_message.content = "图库还剩余%d张"
+            hello_message.content = "图库还剩余%d张" % remain
+            qqbot.logger.info("Remain %d" % remain)
         else:
             hello_message.content = "获取图库剩余图片失败"
+            qqbot.logger.warning("Get sese image database remain fail")
     else:
+        qqbot.logger.info("Recognized command default")
         hello_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, robot_version)
         hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
 
     hello_message.msg_id = message.id
-    msg_api = qqbot.MessageAPI(token, False)
-    msg_api.post_message(message.channel_id, hello_message)
+    msg_api = qqbot.MessageAPI(token, False).with_timeout(10)
+    try:
+        msg_api.post_message(message.channel_id, hello_message)
+    except Exception as err:
+        qqbot.logger.info("Send message error: %s" % str(err))
+    finally:
+        qqbot.logger.info("Sent message")
 
 
 # 私信回复
@@ -149,11 +161,12 @@ def _direct_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
     # 打印返回信息
     qqbot.logger.info(
-        "event %s" % event + ", receive direct message %s" % message.content + ", came from %s" % message.author.username)
+        "event %s" % event + ", receive direct message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
+    qqbot.logger.info("Recognized command default")
     hello_message.content = "你好%s! 我是Ayaki，请多指教! 当前版本：%s" % (message.author.username, robot_version)
     hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
     hello_message.msg_id = message.id
-    dms_api = qqbot.DmsAPI(token, False)
+    dms_api = qqbot.DmsAPI(token, False).with_timeout(10)
     dms_api.post_direct_message(message.guild_id, hello_message)
 
 
@@ -161,17 +174,10 @@ if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
     user = userApi.me()
     # 打印机器人名字
-    print(user.username)
-    guilds = userApi.me_guilds()
-    for guild in guilds:
-        print(guild.id + " " + guild.name)
-
-    channelApi = qqbot.ChannelAPI(token, False)
-    channels = channelApi.get_channels(guildid)
-    for channel in channels:
-        print(channel.id + " " + channel.name)
+    qqbot.logger.info("Starting %s..." % user.username)
 
     ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
     ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
     qqbot.listen_events(token, False, ayaki_at_message_handler)
     qqbot.listen_events(token, False, ayaki_direct_message_handler)
+    qqbot.logger.info("%s start complete, current version %s" % (user.username, robot_version))
