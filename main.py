@@ -14,11 +14,12 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
+robot_version = "3.1.0"
 
 token = qqbot.Token(appid, access_token)
 
 
-# 爬取一张图片并上传到我的图床并返回我的图床上的URL
+# 爬取一张图片并上传到我的图床并返回我的图床上的URL(已废弃）
 def _get_pixiv_image(index: int):
     pixiv_api = AppPixivAPI()
     pixiv_api.auth(refresh_token=pixiv_refresh_token)
@@ -56,6 +57,21 @@ def _get_pixiv_image(index: int):
         return img_url
 
 
+def _get_seremain():
+    cnt = 0
+    try:
+        with open("pixiv_src.csv", "r") as src:
+            for line in src.readlines():
+                values = line.split(',')
+                have_used = int(values[3])
+                if have_used == 0:
+                    cnt += 1
+    except Exception as err:
+        cnt = -1
+        qqbot.logger.info("get seremain fail, " + str(err))
+    return cnt
+
+
 # 群中被at的回复
 def _at_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
@@ -68,6 +84,8 @@ def _at_message_handler(event, message: Message):
             hello_message.content = "我也爱你哦"
         else:
             hello_message.content = "对不起，你是个好人。"
+
+    # 发送一张图库的图片
     elif message.content.find("sese") != -1:
         try:
             newlines = []
@@ -106,13 +124,21 @@ def _at_message_handler(event, message: Message):
                     write_src_file.write(newline)
 
         except Exception as err:
-            hello_message.content = "获取图片失败" + err
+            hello_message.content = "获取图片失败, " + err
             qqbot.logger.info("get image fail")
             qqbot.logger.info(err)
 
+    # 获取图库剩余图片
+    elif message.content.find("seremain") != -1:
+        remain = _get_seremain()
+        if remain >= 0:
+            hello_message.content = "图库还剩余%d张"
+        else:
+            hello_message.content = "获取图库剩余图片失败"
     else:
-        hello_message.content = "你好%s! 我是Ayaki，请多指教了哦!" % (message.author.username)
+        hello_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, robot_version)
         hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
+
     hello_message.msg_id = message.id
     msg_api = qqbot.MessageAPI(token, False)
     msg_api.post_message(message.channel_id, hello_message)
@@ -124,7 +150,7 @@ def _direct_message_handler(event, message: Message):
     # 打印返回信息
     qqbot.logger.info(
         "event %s" % event + ", receive direct message %s" % message.content + ", came from %s" % message.author.username)
-    hello_message.content = "你好%s! 我是Ayaki，请多指教!" % (message.author.username)
+    hello_message.content = "你好%s! 我是Ayaki，请多指教! 当前版本：%s" % (message.author.username, robot_version)
     hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
     hello_message.msg_id = message.id
     dms_api = qqbot.DmsAPI(token, False)
