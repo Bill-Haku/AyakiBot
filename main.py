@@ -14,7 +14,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.1.2"
+robot_version = "3.1.4"
 
 token = qqbot.Token(appid, access_token)
 
@@ -68,7 +68,7 @@ def _get_seremain():
                     cnt += 1
     except Exception as err:
         cnt = -1
-        qqbot.logger.info("get seremain fail, " + str(err))
+        qqbot.logger.error("Get seremain fail, " + str(err))
     return cnt
 
 
@@ -113,7 +113,7 @@ def _at_message_handler(event, message: Message):
                         new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1\n"
                         newlines.append(new_csv_info)
                         havesent = True
-                        qqbot.logger.info("Found available image")
+                        qqbot.logger.info("Found available image %s" % img_id)
                     else:
                         newlines.append(line)
 
@@ -124,12 +124,11 @@ def _at_message_handler(event, message: Message):
             # 写回新的资源表
             with open("pixiv_src.csv", "w") as write_src_file:
                 for newline in newlines:
-                    # print(newline)
                     write_src_file.write(newline)
 
         except Exception as err:
             hello_message.content = "获取图片失败, " + err
-            qqbot.logger.info("Get sese image fail: %s" % str(err))
+            qqbot.logger.error("Get sese image fail: %s" % str(err))
 
     # 获取图库剩余图片
     elif message.content.find("seremain") != -1:
@@ -137,7 +136,7 @@ def _at_message_handler(event, message: Message):
         remain = _get_seremain()
         if remain >= 0:
             hello_message.content = "图库还剩余%d张" % remain
-            qqbot.logger.info("Remain %d" % remain)
+            qqbot.logger.info("Get seremain success, remain %d" % remain)
         else:
             hello_message.content = "获取图库剩余图片失败"
             qqbot.logger.warning("Get sese image database remain fail")
@@ -150,10 +149,15 @@ def _at_message_handler(event, message: Message):
     msg_api = qqbot.MessageAPI(token, False).with_timeout(10)
     try:
         msg_api.post_message(message.channel_id, hello_message)
+        qqbot.logger.info("Send message success")
     except Exception as err:
-        qqbot.logger.info("Send message error: %s" % str(err))
-    finally:
-        qqbot.logger.info("Sent message")
+        qqbot.logger.error("Send message error: %s, now try again" % str(err))
+        try:
+            msg_api.post_message(message.channel_id, hello_message)
+            qqbot.logger.info("Send message success")
+        except Exception as err2:
+            qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
+
 
 
 # 私信回复

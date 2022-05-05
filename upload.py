@@ -46,7 +46,11 @@ def _upload_pixiv_image():
             url = illustorigin.meta_single_page['original_image_url']
         else:
             url = illustorigin.meta_pages[0].image_urls['original']
-        res = requests.get(url, headers=headers, verify=False)
+        try:
+            res = requests.get(url, headers=headers, verify=False)
+        except:
+            print("occured error")
+            continue
         with open("pixiv_%s.jpg" % cur_Illust.id, 'wb') as f:
             file_name = "pixiv_%s.jpg" % cur_Illust.id
             f.write(res.content)
@@ -67,7 +71,7 @@ def _upload_pixiv_image():
             size /= 1024  # 单位化为kB
             print(size)
             img_compressed_url = img_url
-            if size > 4500:
+            if size > 4000:
                 # 文件过大，额外保存一个压缩版
                 file_name_compressed = "pixiv_%s_compressed.jpg" % cur_Illust.id
                 compression(file_name, file_name_compressed)
