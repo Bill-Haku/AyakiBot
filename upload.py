@@ -48,8 +48,8 @@ def _upload_pixiv_image():
             url = illustorigin.meta_pages[0].image_urls['original']
         try:
             res = requests.get(url, headers=headers, verify=False)
-        except:
-            print("occured error")
+        except Exception as err:
+            print("occured error " + err)
             continue
         with open("pixiv_%s.jpg" % cur_Illust.id, 'wb') as f:
             file_name = "pixiv_%s.jpg" % cur_Illust.id
@@ -74,22 +74,26 @@ def _upload_pixiv_image():
             if size > 4000:
                 # 文件过大，额外保存一个压缩版
                 file_name_compressed = "pixiv_%s_compressed.jpg" % cur_Illust.id
-                compression(file_name, file_name_compressed)
                 try:
-                    with open(file_name_compressed, "rb") as f_compressed:
-                        encoded_str = base64.b64encode(f_compressed.read())
-                    data = {
-                        "source": encoded_str,
-                        "action": "upload",
-                        "key": "26c556d135a0f1c18048fbac0d9b85c8",
-                        "format": "txt"
-                    }
-                    post_url = "http://billdc.synology.me:1234/api/1/upload"
-                    chevereto_req = requests.post(post_url, verify=False, data=data)
-                    img_compressed_url = str(chevereto_req.content, 'utf-8')
-                    print("compressed" + img_compressed_url)
-                except:
-                    print("save compress fail")
+                    compression(file_name, file_name_compressed)
+                    try:
+                        with open(file_name_compressed, "rb") as f_compressed:
+                            encoded_str = base64.b64encode(f_compressed.read())
+                        data = {
+                            "source": encoded_str,
+                            "action": "upload",
+                            "key": "26c556d135a0f1c18048fbac0d9b85c8",
+                            "format": "txt"
+                        }
+                        post_url = "http://billdc.synology.me:1234/api/1/upload"
+                        chevereto_req = requests.post(post_url, verify=False, data=data)
+                        img_compressed_url = str(chevereto_req.content, 'utf-8')
+                        print("compressed " + img_compressed_url)
+                    except Exception as err:
+                        print("save compress fail " + str(err))
+                except Exception as err:
+                    print("compress fail: " + str(err))
+                    continue
 
             # 写入csv文件
             # csv文件格式: "id", "img_url", "img_compressed_url", "have_used?"

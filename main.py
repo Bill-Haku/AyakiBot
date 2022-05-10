@@ -109,7 +109,6 @@ def _at_message_handler(event, message: Message):
                         if img_url != img_origin_url:
                             hello_message.content += "(原图由于过大已被压缩过)"
                         hello_message.image = img_url
-                        print("sent image %s" % img_id)
                         new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1\n"
                         newlines.append(new_csv_info)
                         havesent = True
