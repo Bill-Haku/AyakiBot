@@ -140,3 +140,8 @@ cython_debug/
 
 .DS_Store
 qqbot.log
+*.jpg
+*.png
+chromedriver
+*.csv
+qqbot.log
