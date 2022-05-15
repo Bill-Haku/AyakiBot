@@ -42,6 +42,12 @@ def _upload_pixiv_image():
 
         top_json_result = pixiv_api.illust_detail(cur_Illust.id)
         illustorigin = top_json_result.illust
+        print(illustorigin)
+        if illustorigin["type"] != 'illust':
+            print("Get %s, skip" % illustorigin["type"])
+            continue
+
+
         if str(illustorigin.meta_single_page) != '{}':
             url = illustorigin.meta_single_page['original_image_url']
         else:
@@ -49,8 +55,9 @@ def _upload_pixiv_image():
         try:
             res = requests.get(url, headers=headers, verify=False)
         except Exception as err:
-            print("occured error " + err)
+            print("occured error " + str(err))
             continue
+
         with open("pixiv_%s.jpg" % cur_Illust.id, 'wb') as f:
             file_name = "pixiv_%s.jpg" % cur_Illust.id
             f.write(res.content)
@@ -98,8 +105,10 @@ def _upload_pixiv_image():
             # 写入csv文件
             # csv文件格式: "id", "img_url", "img_compressed_url", "have_used?"
             with open("pixiv_src.csv", "a+") as w:
-                csv_line = str(cur_Illust.id) + "," + img_url + "," + img_compressed_url + ",0\n"
+                csv_line = str(cur_Illust.id) + "," + img_url + "," + img_compressed_url + ",0," + \
+                           str(cur_Illust.title) + "\n"
                 w.write(csv_line)
+
 
 
 if __name__ == '__main__':

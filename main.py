@@ -145,7 +145,7 @@ def _at_message_handler(event, message: Message):
         hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
 
     hello_message.msg_id = message.id
-    msg_api = qqbot.MessageAPI(token, False).with_timeout(10)
+    msg_api = qqbot.MessageAPI(token, False, timeout=10)
     try:
         msg_api.post_message(message.channel_id, hello_message)
         qqbot.logger.info("Send message success")
@@ -169,7 +169,7 @@ def _direct_message_handler(event, message: Message):
     hello_message.content = "你好%s! 我是Ayaki，请多指教! 当前版本：%s" % (message.author.username, robot_version)
     hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
     hello_message.msg_id = message.id
-    dms_api = qqbot.DmsAPI(token, False).with_timeout(10)
+    dms_api = qqbot.DmsAPI(token, False, timeout=10)
     dms_api.post_direct_message(message.guild_id, hello_message)
 
 
