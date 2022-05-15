@@ -9,6 +9,22 @@ from PIL import Image
 
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
+sent_image_list = []
+
+
+def get_sent_image_list():
+    with open("pixiv_src.csv", "r") as img_src_file:
+        for line in img_src_file.readlines():
+            if line == "":
+                continue
+            values = line.split(',')
+            img_id = str(values[0])
+            if img_id == "update":
+                continue
+            if img_id in sent_image_list:
+                continue
+            else:
+                sent_image_list.append(img_id)
 
 
 # 压缩图片并保存
@@ -30,6 +46,8 @@ def compression(srcFile, distFile):
 
 # 爬取一张图片并上传到我的图床并返回我的图床上的URL
 def _upload_pixiv_image():
+    get_sent_image_list()
+    print(sent_image_list)
     pixiv_api = AppPixivAPI()
     pixiv_api.auth(refresh_token=pixiv_refresh_token)
 
@@ -37,12 +55,16 @@ def _upload_pixiv_image():
     illusts = pixiv_json_result.illusts
 
     for cur_Illust in illusts:
+        if str(cur_Illust.id) in sent_image_list:
+            print("have added this image")
+            continue
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         headers = {'Referer': 'https://www.pixiv.net/'}
 
         top_json_result = pixiv_api.illust_detail(cur_Illust.id)
         illustorigin = top_json_result.illust
         print(illustorigin)
+
         if illustorigin["type"] != 'illust':
             print("Get %s, skip" % illustorigin["type"])
             continue
@@ -103,7 +125,7 @@ def _upload_pixiv_image():
                     continue
 
             # 写入csv文件
-            # csv文件格式: "id", "img_url", "img_compressed_url", "have_used?"
+            # csv文件格式: "id", "img_url", "img_compressed_url", "have_used?", "title"
             with open("pixiv_src.csv", "a+") as w:
                 csv_line = str(cur_Illust.id) + "," + img_url + "," + img_compressed_url + ",0," + \
                            str(cur_Illust.title) + "\n"

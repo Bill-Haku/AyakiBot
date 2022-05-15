@@ -2,6 +2,7 @@ import qqbot
 import requests
 import urllib3
 import base64
+import datetime
 from qqbot import *
 from pixivpy3 import *
 
@@ -14,9 +15,11 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.1.4"
+robot_version = "3.2.0"
 
 token = qqbot.Token(appid, access_token)
+
+update_date = ""
 
 
 # 爬取一张图片并上传到我的图床并返回我的图床上的URL(已废弃）
@@ -72,6 +75,7 @@ def _get_seremain():
     return cnt
 
 
+
 # 群中被at的回复
 def _at_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
@@ -99,17 +103,25 @@ def _at_message_handler(event, message: Message):
                     if not havesent:
                         values = line.split(',')
                         img_id = values[0]
+                        if img_id == "update":
+                            update_date = values[1]
+                            continue
                         img_origin_url = values[1]
                         img_url = values[2]
                         have_used = int(values[3])
+                        try:
+                            title = values[4]
+                        except Exception:
+                            title = "暂无标题信息"
+                            qqbot.logger.info("Title of %s found nil" % img_id)
                         if have_used == 1:
                             newlines.append(line)
                             continue
-                        hello_message.content = "PID: " + img_id
+                        hello_message.content = "PID: " + img_id + ", " + title
                         if img_url != img_origin_url:
                             hello_message.content += "(原图由于过大已被压缩过)"
                         hello_message.image = img_url
-                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1\n"
+                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "\n"
                         newlines.append(new_csv_info)
                         havesent = True
                         qqbot.logger.info("Found available image %s" % img_id)
