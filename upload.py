@@ -47,7 +47,7 @@ def compression(srcFile, distFile):
 # 爬取一张图片并上传到我的图床并返回我的图床上的URL
 def _upload_pixiv_image():
     get_sent_image_list()
-    print(sent_image_list)
+    # print(sent_image_list)
     pixiv_api = AppPixivAPI()
     pixiv_api.auth(refresh_token=pixiv_refresh_token)
 
@@ -63,7 +63,7 @@ def _upload_pixiv_image():
 
         top_json_result = pixiv_api.illust_detail(cur_Illust.id)
         illustorigin = top_json_result.illust
-        print(illustorigin)
+        # print(illustorigin)
 
         if illustorigin["type"] != 'illust':
             print("Get %s, skip" % illustorigin["type"])

@@ -3,6 +3,8 @@ import requests
 import urllib3
 import base64
 import datetime
+import time
+import os
 from qqbot import *
 from pixivpy3 import *
 
@@ -15,11 +17,21 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.2.0"
+robot_version = "3.2.1"
 
 token = qqbot.Token(appid, access_token)
 
 update_date = ""
+
+
+def TimeStampToTime(timestamp):
+    timeStruct = time.localtime(timestamp)
+    return time.strftime('%Y-%m-%d %H:%M:%S',timeStruct)
+
+
+def get_file_modified_time(filePath):
+    t = os.path.getmtime(filePath)
+    return TimeStampToTime(t)
 
 
 # 爬取一张图片并上传到我的图床并返回我的图床上的URL(已废弃）
@@ -109,14 +121,14 @@ def _at_message_handler(event, message: Message):
                         img_origin_url = values[1]
                         img_url = values[2]
                         have_used = int(values[3])
+                        if have_used == 1:
+                            newlines.append(line)
+                            continue
                         try:
                             title = values[4]
                         except Exception:
                             title = "暂无标题信息"
                             qqbot.logger.info("Title of %s found nil" % img_id)
-                        if have_used == 1:
-                            newlines.append(line)
-                            continue
                         hello_message.content = "PID: " + img_id + ", " + title
                         if img_url != img_origin_url:
                             hello_message.content += "(原图由于过大已被压缩过)"
