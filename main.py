@@ -17,11 +17,9 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.2.2"
+robot_version = "3.3.0"
 
 token = qqbot.Token(appid, access_token)
-
-update_date = ""
 
 
 def TimeStampToTime(timestamp):
@@ -95,6 +93,8 @@ def _at_message_handler(event, message: Message):
     qqbot.logger.info(
         "event %s" % event + ", receive at message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
 
+    undefined_command = False
+
     if message.content.find("爱你") != -1 or message.content.find("love you") != -1:
         qqbot.logger.info("Recognized command love you")
         if message.author.username == "水里的碳酸钙":
@@ -116,9 +116,6 @@ def _at_message_handler(event, message: Message):
                         values = line.split(',')
                         try:
                             img_id = values[0]
-                            if img_id == "update":
-                                update_date = values[1]
-                                continue
                             img_origin_url = values[1]
                             img_url = values[2]
                             have_used = int(values[3])
@@ -167,23 +164,45 @@ def _at_message_handler(event, message: Message):
         else:
             hello_message.content = "获取图库剩余图片失败"
             qqbot.logger.warning("Get sese image database remain fail")
-    else:
-        qqbot.logger.info("Recognized command default")
+
+    elif message.content.find("hello") != -1:
+        qqbot.logger.info("Recognized command hello")
         hello_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, robot_version)
         hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
 
-    hello_message.msg_id = message.id
-    msg_api = qqbot.MessageAPI(token, False, timeout=10)
-    try:
-        msg_api.post_message(message.channel_id, hello_message)
-        qqbot.logger.info("Send message success")
-    except Exception as err:
-        qqbot.logger.error("Send message error: %s, now try again" % str(err))
+    elif message.content.find("info") != -1:
+        qqbot.logger.info("Recognized command info")
+        remain = _get_seremain()
+        if remain >= 0:
+            remain_info = "%d" % remain
+            qqbot.logger.info("Get remain success, remain %d" % remain)
+        else:
+            remain_info = "获取失败"
+            qqbot.logger.warning("Get sese image database remain fail")
+        hello_message.content = "At_Message_Handler运行正常\nWeb Socket连接正常\n图库图片剩余%s" % remain_info
+
+    elif message.content.find("ver") != -1:
+        qqbot.logger.info("Recognized command version")
+        update_time = TimeStampToTime(get_file_modified_time("pixiv_src.csv"))
+        hello_message.content = "Script Version: %s\nIllustration Database Update Time: %s" % (robot_version, update_time)
+
+    else:
+        qqbot.logger.info("Undefined command")
+        undefined_command = True
+
+    if not undefined_command:
+        hello_message.msg_id = message.id
+        msg_api = qqbot.MessageAPI(token, False, timeout=10)
         try:
             msg_api.post_message(message.channel_id, hello_message)
             qqbot.logger.info("Send message success")
-        except Exception as err2:
-            qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
+        except Exception as err:
+            qqbot.logger.error("Send message error: %s, now try again" % str(err))
+            try:
+                msg_api.post_message(message.channel_id, hello_message)
+                qqbot.logger.info("Send message success")
+            except Exception as err2:
+                qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
 
 
 
