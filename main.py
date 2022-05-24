@@ -17,7 +17,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.3.0"
+robot_version = "3.3.1"
 
 token = qqbot.Token(appid, access_token)
 
@@ -183,7 +183,7 @@ def _at_message_handler(event, message: Message):
 
     elif message.content.find("ver") != -1:
         qqbot.logger.info("Recognized command version")
-        update_time = TimeStampToTime(get_file_modified_time("pixiv_src.csv"))
+        update_time = get_file_modified_time("pixiv_src.csv")
         hello_message.content = "Script Version: %s\nIllustration Database Update Time: %s" % (robot_version, update_time)
 
     else:
