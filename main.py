@@ -76,7 +76,8 @@ def send_moyu_cal():
     qqbot.logger.info("Send today's moyu calendar")
     send_message = MessageSendRequest()
     send_message.image = "https://api.vvhan.com/api/moyu"
-    send_message.content = "今天也要努力摸鱼鸭！"
+    today = datetime.date.today()
+    send_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
     msg_api = qqbot.MessageAPI(token, False, timeout=10)
     try:
         msg_api.post_message(nichijou_channel_id, send_message)
@@ -89,6 +90,13 @@ def send_moyu_cal():
         except Exception as err2:
             qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
 
+
+def _moyu_handler(event, data):
+    schedule.every().day.at("09:00").do(send_moyu_cal)
+    schedule.every().day.at("21:00").do(send_moyu_cal)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 def _get_seremain():
     cnt = 0
@@ -248,6 +256,8 @@ if __name__ == '__main__':
 
     ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
     ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
+    ayaki_moyu_handler = qqbot.Handler(qqbot.HandlerType.PLAIN_EVENT_HANDLER, _moyu_handler)
     qqbot.listen_events(token, False, ayaki_at_message_handler)
     qqbot.listen_events(token, False, ayaki_direct_message_handler)
+    qqbot.listen_events(token, False, ayaki_moyu_handler)
     qqbot.logger.info("%s start complete, current version %s" % (user.username, robot_version))
