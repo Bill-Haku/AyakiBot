@@ -5,6 +5,7 @@ import base64
 import datetime
 import time
 import os
+import schedule
 from qqbot import *
 from pixivpy3 import *
 
@@ -12,12 +13,13 @@ appid = "102005740"
 sandboxid = 4294837189
 guildid = "5440859059313954953"  # 之外语文
 test_channel_id = "5463311"
-hphoto_channel_id = "3613561"
+sesephoto_channel_id = "3613561"
+nichijou_channel_id = "3613272"
 access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.3.1"
+robot_version = "3.4.0"
 
 token = qqbot.Token(appid, access_token)
 
@@ -68,6 +70,24 @@ def _get_pixiv_image(index: int):
         img_url = str(chevereto_req.content, 'utf-8')
         print(img_url)
         return img_url
+
+
+def send_moyu_cal():
+    qqbot.logger.info("Send today's moyu calendar")
+    send_message = MessageSendRequest()
+    send_message.image = "https://api.vvhan.com/api/moyu"
+    send_message.content = "今天也要努力摸鱼鸭！"
+    msg_api = qqbot.MessageAPI(token, False, timeout=10)
+    try:
+        msg_api.post_message(nichijou_channel_id, send_message)
+        qqbot.logger.info("Send message success")
+    except Exception as err:
+        qqbot.logger.error("Send message error: %s, now try again" % str(err))
+        try:
+            msg_api.post_message(nichijou_channel_id, send_message)
+            qqbot.logger.info("Send message success")
+        except Exception as err2:
+            qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
 
 
 def _get_seremain():
