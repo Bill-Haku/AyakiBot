@@ -17,7 +17,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.2.1"
+robot_version = "3.2.2"
 
 token = qqbot.Token(appid, access_token)
 
@@ -114,26 +114,30 @@ def _at_message_handler(event, message: Message):
                         continue
                     if not havesent:
                         values = line.split(',')
-                        img_id = values[0]
-                        if img_id == "update":
-                            update_date = values[1]
-                            continue
-                        img_origin_url = values[1]
-                        img_url = values[2]
-                        have_used = int(values[3])
-                        if have_used == 1:
-                            newlines.append(line)
+                        try:
+                            img_id = values[0]
+                            if img_id == "update":
+                                update_date = values[1]
+                                continue
+                            img_origin_url = values[1]
+                            img_url = values[2]
+                            have_used = int(values[3])
+                            if have_used == 1:
+                                newlines.append(line)
+                                continue
+                        except Exception as err:
+                            qqbot.logger.error("read line value error: " + str(err))
                             continue
                         try:
                             title = values[4]
                         except Exception:
-                            title = "暂无标题信息"
+                            title = "暂无标题信息\n"
                             qqbot.logger.info("Title of %s found nil" % img_id)
                         hello_message.content = "PID: " + img_id + ", " + title
                         if img_url != img_origin_url:
                             hello_message.content += "(原图由于过大已被压缩过)"
                         hello_message.image = img_url
-                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "\n"
+                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title
                         newlines.append(new_csv_info)
                         havesent = True
                         qqbot.logger.info("Found available image %s" % img_id)
