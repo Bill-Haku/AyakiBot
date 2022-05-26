@@ -6,6 +6,7 @@ import datetime
 import time
 import os
 import _thread
+import platform
 import schedule as sch
 from qqbot import *
 from pixivpy3 import *
@@ -20,7 +21,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.4.0"
+robot_version = "3.4.3"
 
 token = qqbot.Token(appid, access_token)
 
@@ -79,8 +80,6 @@ def send_moyu_cal():
     res = requests.get(image_api)
     res_json = res.json()
     image_url = res_json['url']
-    print(res_json)
-    print(image_url)
     send_message = MessageSendRequest()
     send_message.image = image_url
     today = datetime.date.today()
@@ -125,7 +124,7 @@ def _at_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
     # 打印返回信息
     qqbot.logger.info(
-        "event %s" % event + ", receive at message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
+        "receive at message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
 
     undefined_command = False
 
@@ -199,11 +198,13 @@ def _at_message_handler(event, message: Message):
     #         hello_message.content = "获取图库剩余图片失败"
     #         qqbot.logger.warning("Get sese image database remain fail")
 
+    # 打招呼
     elif message.content.find("/hello") != -1:
         qqbot.logger.info("Recognized command hello")
         hello_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, robot_version)
         hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
 
+    # 发送程序相关信息
     elif message.content.find("/info") != -1:
         qqbot.logger.info("Recognized command info")
         remain = _get_seremain()
@@ -213,7 +214,8 @@ def _at_message_handler(event, message: Message):
         else:
             remain_info = "获取失败"
             qqbot.logger.warning("Get sese image database remain fail")
-        hello_message.content = "At_Message_Handler运行正常\nWeb Socket连接正常\n图库图片剩余%s" % remain_info
+        hello_message.content = "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
+                                "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
 
     elif message.content.find("/ver") != -1:
         qqbot.logger.info("Recognized command version")
@@ -222,9 +224,17 @@ def _at_message_handler(event, message: Message):
 
     elif message.content.find("/moyu") != -1:
         qqbot.logger.info("Recognized command moyu")
+        image_api = "https://api.vvhan.com/api/moyu?type=json"
+        res = requests.get(image_api)
+        res_json = res.json()
+        image_url = res_json['url']
+        hello_message.image = image_url
         today = datetime.date.today()
         hello_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
-        hello_message.image = "https://api.vvhan.com/api/moyu"
+
+    elif message.content.find("shutdown") != -1:
+        qqbot.logger.info("Recognized command shutdown")
+        exit(0)
 
     else:
         qqbot.logger.info("Undefined command")
@@ -265,6 +275,8 @@ if __name__ == '__main__':
     user = userApi.me()
     # 打印机器人名字
     qqbot.logger.info("Starting %s..." % user.username)
+    qqbot.logger.info("Platform: %s" % platform.platform())
+    qqbot.logger.info("Python version: %s" % platform.python_version())
 
     ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
     ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
