@@ -23,7 +23,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.5.0"
+robot_version = "3.5.1"
 
 token = qqbot.Token(appid, access_token)
 
@@ -53,21 +53,27 @@ def sign_in_handler(message: Message):
     good = "宜："
     bad = "忌："
     threshold = 90
+    threshold2 = 20
     manshi_rand = random.randint(0,100)
     if unsei_index == 0:
         threshold = 50
+        threshold2 = -1
     elif unsei_index == 1:
         threshold = 70
+        threshold2 = 5
     elif unsei_index == 2:
         threshold = 80
+        threshold2 = 10
     elif unsei_index == 3:
         threshold = 90
+        threshold2 = 15
     elif unsei_index >= 4:
         threshold = 101
+        threshold2 = 25
     if manshi_rand >= threshold:
         good += "万事皆宜"
         bad += "万事皆宜"
-    elif manshi_rand <= 10:
+    elif manshi_rand < threshold2:
         good += "诸事不宜"
         bad += "诸事不宜"
     else:
