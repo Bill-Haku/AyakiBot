@@ -105,7 +105,7 @@ def _upload_pixiv_image():
             img_compressed_url = img_url
             if size > 4000:
                 # 文件过大，额外保存一个压缩版
-                file_name_compressed = "pixiv_%s_compressed.jpg" % cur_Illust.id
+                file_name_compressed = "pixiv_%s_compressed.png" % cur_Illust.id
                 try:
                     compression(file_name, file_name_compressed)
                     try:
