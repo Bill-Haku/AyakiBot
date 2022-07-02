@@ -144,3 +144,5 @@ qqbot.log
 *.png
 chromedriver
 *.csv
+test.py
+pixiv_src.bak

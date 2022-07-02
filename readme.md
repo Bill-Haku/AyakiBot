@@ -8,15 +8,13 @@ Ayaki的出生日期是2022年4月20日。
 
 Ayaki的头像是我使用AI画的。
 
-![Ayaki-Watermark.png](http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png)
+![Ayaki-Watermark.png](http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png)
 
 ## 更新记录&版本规划
 
-- 3.5.0
+- 3.4.4
 
-    增加每天提供的图库数量
-
-    将消息的响应逻辑改为异步执行，提高响应能力
+    更新图库域名
 
 - 3.4.3 - 2022.5.26 - Newest
 

@@ -36,44 +36,6 @@ def get_file_modified_time(filePath):
     return TimeStampToTime(t)
 
 
-# 爬取一张图片并上传到我的图床并返回我的图床上的URL(已废弃）
-def _get_pixiv_image(index: int):
-    pixiv_api = AppPixivAPI()
-    pixiv_api.auth(refresh_token=pixiv_refresh_token)
-
-    pixiv_json_result = pixiv_api.illust_ranking('day')
-    # for illust in pixiv_json_result.illusts:
-    #     print(" p1 [%s] %s" % (illust.title, illust.image_urls.large))
-    cur_Illust = pixiv_json_result.illusts[index]
-
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    headers = {'Referer': 'https://www.pixiv.net/'}
-    print(cur_Illust)
-
-    top_json_result = pixiv_api.illust_detail(cur_Illust.id)
-    illustorigin = top_json_result.illust
-    url = illustorigin.meta_single_page['original_image_url']
-    # return url
-    res = requests.get(url, headers=headers, verify=False)
-    with open("pixiv_%s.jpg" % cur_Illust.id, 'wb') as f:
-        file_name = "pixiv_%s.jpg" % cur_Illust.id
-        f.write(res.content)
-        encoded_str = base64.b64encode(res.content)
-        # files = {"file": res.content}
-        data = {
-            "source": encoded_str,
-            "action": "upload",
-            "key": "26c556d135a0f1c18048fbac0d9b85c8",
-            "format": "txt"
-        }
-        post_url = "http://billdc.synology.me:1234/api/1/upload"
-        chevereto_req = requests.post(post_url, verify=False, data=data)
-        print(chevereto_req.content)
-        img_url = str(chevereto_req.content, 'utf-8')
-        print(img_url)
-        return img_url
-
-
 def send_moyu_cal():
     qqbot.logger.info("Send today's moyu calendar")
     image_api = "https://api.vvhan.com/api/moyu?type=json"
@@ -202,7 +164,7 @@ def _at_message_handler(event, message: Message):
     elif message.content.find("/hello") != -1:
         qqbot.logger.info("Recognized command hello")
         hello_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, robot_version)
-        hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
+        hello_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
 
     # 发送程序相关信息
     elif message.content.find("/info") != -1:
@@ -264,7 +226,7 @@ def _direct_message_handler(event, message: Message):
         "event %s" % event + ", receive direct message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
     qqbot.logger.info("Recognized command default")
     hello_message.content = "你好%s! 我是Ayaki，请多指教! 当前版本：%s" % (message.author.username, robot_version)
-    hello_message.image = "http://billdc.synology.me:1234/images/2022/02/27/Ayaki-Watermark.png"
+    hello_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
     hello_message.msg_id = message.id
     dms_api = qqbot.DmsAPI(token, False, timeout=10)
     dms_api.post_direct_message(message.guild_id, hello_message)

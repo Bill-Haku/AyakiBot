@@ -55,6 +55,7 @@ def _upload_pixiv_image():
     illusts = pixiv_json_result.illusts
 
     for cur_Illust in illusts:
+        # print(cur_Illust)
         if str(cur_Illust.id) in sent_image_list:
             print("have added this image")
             continue
@@ -64,6 +65,8 @@ def _upload_pixiv_image():
         top_json_result = pixiv_api.illust_detail(cur_Illust.id)
         illustorigin = top_json_result.illust
         # print(illustorigin)
+        author = cur_Illust.user['name']
+        # print(author)
 
         if illustorigin["type"] != 'illust':
             print("Get %s, skip" % illustorigin["type"])
@@ -90,7 +93,7 @@ def _upload_pixiv_image():
                 "key": "26c556d135a0f1c18048fbac0d9b85c8",
                 "format": "txt"
             }
-            post_url = "http://billdc.synology.me:1234/api/1/upload"
+            post_url = "http://nas.hakubill.tech:1234/api/1/upload"
             chevereto_req = requests.post(post_url, verify=False, data=data)
             img_url = str(chevereto_req.content, 'utf-8')
             print(img_url)
@@ -114,7 +117,7 @@ def _upload_pixiv_image():
                             "key": "26c556d135a0f1c18048fbac0d9b85c8",
                             "format": "txt"
                         }
-                        post_url = "http://billdc.synology.me:1234/api/1/upload"
+                        post_url = "http://nas.hakubill.tech:1234/api/1/upload"
                         chevereto_req = requests.post(post_url, verify=False, data=data)
                         img_compressed_url = str(chevereto_req.content, 'utf-8')
                         print("compressed " + img_compressed_url)
