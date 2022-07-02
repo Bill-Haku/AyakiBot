@@ -23,7 +23,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.5.1"
+robot_version = "3.5.2"
 
 token = qqbot.Token(appid, access_token)
 
@@ -209,11 +209,16 @@ def _at_message_handler(event, message: Message):
                         except Exception:
                             title = "暂无标题信息\n"
                             qqbot.logger.info("Title of %s found nil" % img_id)
-                        hello_message.content = "PID: " + img_id + ", " + title
+                        try:
+                            author = values[5]
+                        except Exception:
+                            author = "暂无画师信息\n"
+                            qqbot.logger.info("Author of %s found nil" % img_id)
+                        hello_message.content = "PID: " + img_id + ", " + title + ", 画师：" + author
                         if img_url != img_origin_url:
                             hello_message.content += "(原图由于过大已被压缩过)"
                         hello_message.image = img_url
-                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title
+                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "," + author
                         newlines.append(new_csv_info)
                         havesent = True
                         qqbot.logger.info("Found available image %s" % img_id)

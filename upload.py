@@ -131,7 +131,7 @@ def _upload_pixiv_image():
             # csv文件格式: "id", "img_url", "img_compressed_url", "have_used?", "title"
             with open("pixiv_src.csv", "a+") as w:
                 csv_line = str(cur_Illust.id) + "," + img_url + "," + img_compressed_url + ",0," + \
-                           str(cur_Illust.title) + "\n"
+                           str(cur_Illust.title) + "," + author + "\n"
                 w.write(csv_line)
 
 
