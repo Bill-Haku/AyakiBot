@@ -60,16 +60,16 @@ def sign_in_handler(message: Message):
         threshold2 = -1
     elif unsei_index == 1:
         threshold = 70
-        threshold2 = 5
+        threshold2 = 3
     elif unsei_index == 2:
         threshold = 80
-        threshold2 = 10
+        threshold2 = 5
     elif unsei_index == 3:
         threshold = 90
-        threshold2 = 15
+        threshold2 = 7
     elif unsei_index >= 4:
         threshold = 101
-        threshold2 = 25
+        threshold2 = 10
     if manshi_rand >= threshold:
         good += "万事皆宜"
         bad += "万事皆宜"
