@@ -101,13 +101,24 @@ def sign_in_handler(message: Message):
         elif unsei_index == 6:
             good_num = random.randint(1,2)
             bad_num = random.randint(3,5)
+        index_dict = {}
         # 获得宜事件
         for i in range(good_num):
-            good += events_list[random.randint(0,len(events_list)-1)].replace('\n', '')
+            while True:
+                index = random.randint(0,len(events_list)-1)
+                if index not in index_dict:
+                    index_dict[index] = True
+                    break
+            good += events_list[index].replace('\n', '')
             good += "  "
         # 获得忌事件
         for i in range(bad_num):
-            bad += events_list[random.randint(0,len(events_list)-1)].replace('\n', '')
+            while True:
+                index = random.randint(0,len(events_list)-1)
+                if index not in index_dict:
+                    index_dict[index] = True
+                    break
+            bad += events_list[index].replace('\n', '')
             bad += "  "
 
     message = "@%s 签到成功!\n" % message.author.username
