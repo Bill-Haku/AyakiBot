@@ -24,6 +24,8 @@ access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
 robot_version = "3.5.3"
+liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
+liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
 
 token = qqbot.Token(appid, access_token)
 
@@ -294,6 +296,7 @@ def _at_message_handler(event, message: Message):
         today = datetime.date.today()
         hello_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
 
+    # 签到与运势功能
     elif message.content.find("/signin") != -1:
         qqbot.logger.info("Recognized command signin")
         # 读取今日签到列表
@@ -321,6 +324,14 @@ def _at_message_handler(event, message: Message):
             # 将ID添加到今日签到列表中
             with open(sign_in_list_name, mode="a") as list_file:
                 list_file.write(message.author.id + '\n')
+        if hello_message.content.find("流汗糖豆") != -1:
+            hello_message.image = liuhantangtang_url
+        elif hello_message.content.find("爆炒🍬🍬") != -1:
+            hello_message.image = liuhantangtang_url
+        elif hello_message.content.find("流汗土豆") != -1:
+            hello_message.image = liuhantutu_url
+        elif hello_message.content.find("爆炒土土") != -1:
+            hello_message.image = liuhantutu_url
         msg_reference = MessageReference(message_id=message.id)
         hello_message.message_reference = msg_reference
 
