@@ -23,7 +23,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.5.2"
+robot_version = "3.5.3"
 
 token = qqbot.Token(appid, access_token)
 
