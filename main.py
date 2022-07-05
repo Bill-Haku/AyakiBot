@@ -23,7 +23,8 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.5.4"
+robot_version = "3.5.5"
+
 liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
 liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
 baochaoaoao_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2643.jpg"
@@ -359,6 +360,13 @@ def _at_message_handler(event, message: Message):
                 qqbot.logger.info("Send message success")
             except Exception as err2:
                 qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
+                try:
+                    time.sleep(1)
+                    msg_api.post_message(message.channel_id, hello_message)
+                    qqbot.logger.info("Send message success")
+                except Exception as err3:
+                    qqbot.logger.error("Send message error: %s, try again again fail" % str(err3))
+
 
 
 
