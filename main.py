@@ -346,6 +346,18 @@ def _at_message_handler(event, message: Message):
         qqbot.logger.info("Recognized command shutdown")
         exit(0)
 
+    elif message.content.find("/help") != -1:
+        qqbot.logger.info("Recognized command help")
+        hello_message.content = "欢迎使用Ayaki，以下是我的使用说明：\n" + \
+                                "/hello：打招呼：你可以使用此命令跟我打招呼。\n " + \
+                                "/signin：签到与运势：你每天可以通过此命令在我这里打卡，同时会自动抽签，记得每天都来看看你的运势吧！\n " + \
+                                "/sese：涩涩！涩涩是人类进步的阶梯！要涩涩的话就来让我发一张涩图吧！\n" + \
+                                "/moyu：发送摸鱼日历：再次发送今天的摸鱼日历。人活着就是为了摸鱼。\n " + \
+                                "/ver：发送版本信息\n " + \
+                                "/info：发送程序相关信息\n "
+        msg_reference = MessageReference(message_id=message.id)
+        hello_message.message_reference = msg_reference
+
     else:
         qqbot.logger.info("Undefined command")
         undefined_command = True
