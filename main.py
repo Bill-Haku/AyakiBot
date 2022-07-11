@@ -23,7 +23,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.5.5"
+robot_version = "3.5.6"
 
 liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
 liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
@@ -283,11 +283,13 @@ def _at_message_handler(event, message: Message):
         hello_message.content = "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
                                 "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
 
+    # 版本信息功能
     elif message.content.find("/ver") != -1:
         qqbot.logger.info("Recognized command version")
         update_time = get_file_modified_time("pixiv_src.csv")
         hello_message.content = "Script Version: %s\nIllustration Database Update Time: %s" % (robot_version, update_time)
 
+    # 摸鱼日历功能
     elif message.content.find("/moyu") != -1:
         qqbot.logger.info("Recognized command moyu")
         image_api = "https://api.vvhan.com/api/moyu?type=json"
@@ -339,6 +341,7 @@ def _at_message_handler(event, message: Message):
         msg_reference = MessageReference(message_id=message.id)
         hello_message.message_reference = msg_reference
 
+    # 关机功能
     elif message.content.find("shutdown") != -1:
         qqbot.logger.info("Recognized command shutdown")
         exit(0)
