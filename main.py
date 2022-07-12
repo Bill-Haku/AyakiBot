@@ -349,6 +349,8 @@ def _at_message_handler(event, message: Message):
     elif message.content.find("/help") != -1:
         qqbot.logger.info("Recognized command help")
         hello_message.content = "欢迎使用Ayaki，以下是我的使用说明：\n" + \
+                                "我的主要功能是运势签到和发送一张涩涩图片。图片来自Pixiv日榜前30，图片每日更新通过转存到Bill的图库发送。" + \
+                                "图库在更新时，会自动筛选剔除已经发送过的和未被作者标记为插画类型的图片。以下是命令介绍：\n" + \
                                 "/hello：打招呼：你可以使用此命令跟我打招呼。\n " + \
                                 "/signin：签到与运势：你每天可以通过此命令在我这里打卡，同时会自动抽签，记得每天都来看看你的运势吧！\n " + \
                                 "/sese：涩涩！涩涩是人类进步的阶梯！要涩涩的话就来让我发一张涩图吧！\n" + \
