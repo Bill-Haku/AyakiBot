@@ -21,3 +21,8 @@ class AyakiFeaturesHandler():
         self.reply_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, self.robot_version)
         self.reply_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
         return self.reply_message
+
+    def shutdown_handler(self, message: Message):
+        self.reply_message.content = "Byebye~"
+        self.online = False
+        return self.reply_message

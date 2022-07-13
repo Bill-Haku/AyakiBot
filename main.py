@@ -415,13 +415,16 @@ class AyakiClient(botpy.Client):
         if not self.handler.online:
             _log.info("Bot is offline, ignore at message")
             return
-        else:
-            reply = MessageReply(content=f"{message.author.username}，你好！SDK正在更新中。")
-            if "/hello" in message.content:
-                _log.info(f"Recognized command hello")
-                reply = self.handler.hello_handler(message=message)
-            await self.api.post_message(channel_id=message.channel_id, content=reply.content,image=reply.image, msg_id=message.id)
-            _log.info(f"Replied {reply.content} SUCCESS")
+
+        reply = MessageReply(content=f"{message.author.username}，你好！SDK正在更新中。")
+        if "/hello" in message.content:
+            _log.info(f"Recognized command hello")
+            reply = self.handler.hello_handler(message=message)
+        elif "shutdown" in message.content:
+            _log.info("Recognized command shutdown")
+            reply = self.handler.shutdown_handler(message=message)
+        await self.api.post_message(channel_id=message.channel_id, content=reply.content,image=reply.image, msg_id=message.id)
+        _log.info(f"Replied {reply.content} SUCCESS")
 
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
