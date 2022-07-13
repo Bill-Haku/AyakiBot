@@ -13,7 +13,7 @@ class MessageReply():
 
 
 class AyakiFeaturesHandler():
-    robot_version = "4.0.0"
+    robot_version = "4.0.1"
     reply_message = MessageReply()
     online = True
 
@@ -25,4 +25,9 @@ class AyakiFeaturesHandler():
     def shutdown_handler(self, message: Message):
         self.reply_message.content = "Byebye~"
         self.online = False
+        return self.reply_message
+
+    def turnon_handler(self, message: Message):
+        self.reply_message.content = "Ayaki回来了哦！"
+        self.online = True
         return self.reply_message
