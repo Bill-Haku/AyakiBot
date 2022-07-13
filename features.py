@@ -21,6 +21,7 @@ class AyakiFeaturesHandler():
     robot_version = "4.0.2"
     reply_message = MessageReply()
     admin_list = ["14862092315735810791"]
+    ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
     unsei_list = ["★★★大吉★★★", "★★中吉★★", "★小吉★", "吉", "末吉", "凶", "大凶"]
     liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
     liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
@@ -84,6 +85,61 @@ class AyakiFeaturesHandler():
         msg_reference = Reference(message_id=message.id)
         self.reply_message.message_reference = msg_reference
         return self.reply_message
+    
+    def sese_handler(self, message: Message):
+        try:
+            newlines = []
+            havesent = False
+            with open("pixiv_src.csv", "r") as img_src_file:
+                for line in img_src_file.readlines():
+                    if line == "":
+                        continue
+                    if not havesent:
+                        values = line.split(',')
+                        try:
+                            img_id = values[0]
+                            img_origin_url = values[1]
+                            img_url = values[2]
+                            have_used = int(values[3])
+                            if have_used == 1:
+                                newlines.append(line)
+                                continue
+                        except Exception as err:
+                            _log.error("read line value error: " + str(err))
+                            continue
+                        try:
+                            title = values[4]
+                        except Exception:
+                            title = "暂无标题信息\n"
+                            _log.info("Title of %s found nil" % img_id)
+                        try:
+                            author = values[5]
+                        except Exception:
+                            author = "暂无画师信息\n"
+                            _log.info("Author of %s found nil" % img_id)
+                        self.reply_message.content = "PID: " + img_id + ", " + title + ", 画师：" + author
+                        if img_url != img_origin_url:
+                            self.reply_message.content += "(原图由于过大已被压缩过)"
+                        self.reply_message.image = img_url
+                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "," + author
+                        newlines.append(new_csv_info)
+                        havesent = True
+                        _log.info("Found available image %s" % img_id)
+                    else:
+                        newlines.append(line)
+
+                if not havesent:
+                    _log.warning("Sese image database found empty")
+                    self.reply_message.content = "图库已用尽，请联系<@14862092315735810791>"
+
+            # 写回新的资源表
+            with open("pixiv_src.csv", "w") as write_src_file:
+                for newline in newlines:
+                    write_src_file.write(newline)
+
+        except Exception as err:
+            self.reply_message.content = "获取图片失败, " + err
+            _log.error("Get sese image fail: %s" % str(err))
 
     # 签到请求处理，返回签到结果
     def sign_in_op_handler(self, message: Message):

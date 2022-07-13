@@ -30,6 +30,7 @@ robot_version = "4.0.2"
 
 
 token = qqbot.Token(appid, access_token)
+ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
 
 
 
@@ -104,80 +105,6 @@ def _at_message_handler(event, message: Message):
             hello_message.content = "我也爱你哦"
         else:
             hello_message.content = "对不起，你是个好人。"
-
-    # 发送一张图库的图片
-    elif message.content.find("/sese") != -1:
-        qqbot.logger.info("Recognized command sese")
-        try:
-            newlines = []
-            havesent = False
-            with open("pixiv_src.csv", "r") as img_src_file:
-                for line in img_src_file.readlines():
-                    if line == "":
-                        continue
-                    if not havesent:
-                        values = line.split(',')
-                        try:
-                            img_id = values[0]
-                            img_origin_url = values[1]
-                            img_url = values[2]
-                            have_used = int(values[3])
-                            if have_used == 1:
-                                newlines.append(line)
-                                continue
-                        except Exception as err:
-                            qqbot.logger.error("read line value error: " + str(err))
-                            continue
-                        try:
-                            title = values[4]
-                        except Exception:
-                            title = "暂无标题信息\n"
-                            qqbot.logger.info("Title of %s found nil" % img_id)
-                        try:
-                            author = values[5]
-                        except Exception:
-                            author = "暂无画师信息\n"
-                            qqbot.logger.info("Author of %s found nil" % img_id)
-                        hello_message.content = "PID: " + img_id + ", " + title + ", 画师：" + author
-                        if img_url != img_origin_url:
-                            hello_message.content += "(原图由于过大已被压缩过)"
-                        hello_message.image = img_url
-                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "," + author
-                        newlines.append(new_csv_info)
-                        havesent = True
-                        qqbot.logger.info("Found available image %s" % img_id)
-                    else:
-                        newlines.append(line)
-
-                if not havesent:
-                    qqbot.logger.warning("Sese image database found empty")
-                    hello_message.content = "图库已用尽，请联系@水里的碳酸钙"
-
-            # 写回新的资源表
-            with open("pixiv_src.csv", "w") as write_src_file:
-                for newline in newlines:
-                    write_src_file.write(newline)
-
-        except Exception as err:
-            hello_message.content = "获取图片失败, " + err
-            qqbot.logger.error("Get sese image fail: %s" % str(err))
-
-    # 获取图库剩余图片
-    # elif message.content.find("/seremain") != -1:
-    #     qqbot.logger.info("Recognized command seremain")
-    #     remain = _get_seremain()
-    #     if remain >= 0:
-    #         hello_message.content = "图库还剩余%d张" % remain
-    #         qqbot.logger.info("Get seremain success, remain %d" % remain)
-    #     else:
-    #         hello_message.content = "获取图库剩余图片失败"
-    #         qqbot.logger.warning("Get sese image database remain fail")
-
-    # 打招呼
-    elif message.content.find("/hello") != -1:
-        qqbot.logger.info("Recognized command hello")
-        hello_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, robot_version)
-        hello_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
 
     # 发送程序相关信息
     elif message.content.find("/info") != -1:
@@ -299,9 +226,16 @@ class AyakiClient(botpy.Client):
             _log.info(f"Recognized command signin")
             reply = self.handler.signin_handler(message=message)
         elif "shutdown" in message.content:
-            _log.info("Recognized command shutdown")
+            _log.info(f"Recognized command shutdown")
             reply = self.handler.shutdown_handler(message=message)
-        await self.api.post_message(channel_id=message.channel_id, content=reply.content,image=reply.image, msg_id=message.id)
+        elif "/sese" in message.content:
+            _log.info(f"Recognized command sese")
+            reply = self.handler.sese_handler(message=message)
+        await self.api.post_message(channel_id=message.channel_id,
+                                    content=reply.content,
+                                    image=reply.image,
+                                    message_reference=reply.message_reference,
+                                    msg_id=message.id)
         _log.info(f"Replied {reply.content} SUCCESS")
 
 if __name__ == '__main__':
