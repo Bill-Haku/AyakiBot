@@ -1,6 +1,7 @@
 import random
 
-import qqbot
+import qqbot    #已废弃
+import botpy
 import requests
 import urllib3
 import base64
@@ -11,6 +12,7 @@ import _thread
 import platform
 import schedule as sch
 from qqbot import *
+from botpy import *
 from pixivpy3 import *
 
 appid = "102005740"
@@ -23,7 +25,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "3.5.6"
+robot_version = "4.0.0"
 
 liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
 liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
@@ -385,8 +387,6 @@ def _at_message_handler(event, message: Message):
                     qqbot.logger.error("Send message error: %s, try again again fail" % str(err3))
 
 
-
-
 # 私信回复
 def _direct_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
@@ -401,6 +401,17 @@ def _direct_message_handler(event, message: Message):
     dms_api.post_direct_message(message.guild_id, hello_message)
 
 
+_log = logging.get_logger()
+
+
+class AyakiClient(botpy.Client):
+    async def on_ready(self):
+        _log.info(f"{self.robot.name} is ready!")
+
+    async def on_at_message_create(self, message: Message):
+        _log.info(f"At message {message.content} came from {message.author.username} - {message.author.id}")
+        await self.api.post_message(channel_id=message.channel_id, content=f"{message.author.username}，你好！SDK正在更新中，请稍后使用。")
+
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
     user = userApi.me()
@@ -409,11 +420,13 @@ if __name__ == '__main__':
     qqbot.logger.info("Platform: %s" % platform.platform())
     qqbot.logger.info("Python version: %s" % platform.python_version())
 
-    ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
-    ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
-    # ayaki_moyu_handler = qqbot.Handler(qqbot.HandlerType.PLAIN_EVENT_HANDLER, _moyu_handler)
-    qqbot.listen_events(token, False, ayaki_at_message_handler)
-    qqbot.listen_events(token, False, ayaki_direct_message_handler)
-    # qqbot.listen_events(token, False, ayaki_moyu_handler)
+    intents = botpy.Intents(public_guild_messages=True)
+    client = AyakiClient(intents=intents)
+    client.run(appid=appid, token=access_token)
+
+    # ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
+    # ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
+    # qqbot.listen_events(token, False, ayaki_at_message_handler)
+    # qqbot.listen_events(token, False, ayaki_direct_message_handler)
     qqbot.logger.info("%s start complete, current version %s" % (user.username, robot_version))
-    _thread.start_new_thread(_moyu_handler())
+    # _thread.start_new_thread(_moyu_handler())
