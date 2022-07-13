@@ -2,9 +2,8 @@ import random
 
 import qqbot    #已废弃
 import botpy
+import features
 import requests
-import urllib3
-import base64
 import datetime
 import time
 import os
@@ -12,7 +11,8 @@ import _thread
 import platform
 import schedule as sch
 from qqbot import *
-from botpy import *
+from botpy.message import *
+from features import *
 from pixivpy3 import *
 
 appid = "102005740"
