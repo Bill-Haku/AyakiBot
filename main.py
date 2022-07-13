@@ -27,7 +27,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "4.0.2"
+robot_version = "4.0.3"
 
 token = qqbot.Token(appid, access_token)
 ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
@@ -194,8 +194,10 @@ class AyakiClient(botpy.Client):
                                         message_reference=reply.reference,
                                         msg_id=message.id)
             _log.info("Reply SUCCESS")
+            reply.reset()
         else:
             _log.info("Undefined command")
+            reply.reset()
 
 
 def start_general_event_handler():

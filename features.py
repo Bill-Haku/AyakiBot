@@ -18,9 +18,14 @@ class MessageReply:
         self.image = image
         self.reference = reference
 
+    def reset(self):
+        self.content = None
+        self.image = None
+        self.reference = None
+
 
 class AyakiFeaturesHandler:
-    robot_version = "4.0.2"
+    robot_version = "4.0.3"
     reply_message = MessageReply()
     admin_list = ["14862092315735810791"]
     ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
