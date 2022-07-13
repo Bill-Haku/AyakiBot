@@ -25,7 +25,7 @@ access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
 access_secret = "QSGtIVUIsITWKxLX"
 pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "4.0.1"
+robot_version = "4.0.2"
 
 liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
 liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
@@ -416,9 +416,12 @@ class AyakiClient(botpy.Client):
             _log.info("Bot is offline, ignore at message")
             if "turnon" in message.content:
                 _log.info("Recognized command turnon")
-                reply = self.handler.turnon_handler(message)
-                await self.api.post_message(channel_id=message.channel_id, content=reply.content, msg_id=message.id)
-                return
+                if message.author.id in self.handler.admin_list:
+                    reply = self.handler.turnon_handler(message)
+                    await self.api.post_message(channel_id=message.channel_id, content=reply.content, msg_id=message.id)
+                    return
+                else:
+                    return
             else:
                 return
 

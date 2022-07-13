@@ -13,8 +13,9 @@ class MessageReply():
 
 
 class AyakiFeaturesHandler():
-    robot_version = "4.0.1"
+    robot_version = "4.0.2"
     reply_message = MessageReply()
+    admin_list = ["14862092315735810791"]
     online = True
 
     def hello_handler(self, message: Message):
@@ -23,8 +24,11 @@ class AyakiFeaturesHandler():
         return self.reply_message
 
     def shutdown_handler(self, message: Message):
-        self.reply_message.content = "Byebye~"
-        self.online = False
+        if message.author.id in self.admin_list:
+            self.reply_message.content = "Byebye~"
+            self.online = False
+        else:
+            self.reply_message.content = "<@14862092315735810791>，有人想对我做坏坏的事情！"
         return self.reply_message
 
     def turnon_handler(self, message: Message):
