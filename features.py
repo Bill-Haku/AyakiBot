@@ -2,6 +2,7 @@ import botpy
 import random
 import datetime
 import os
+import requests
 from botpy import *
 from botpy.message import *
 from botpy.types.message import *
@@ -140,6 +141,15 @@ class AyakiFeaturesHandler():
         except Exception as err:
             self.reply_message.content = "获取图片失败, " + err
             _log.error("Get sese image fail: %s" % str(err))
+
+    def moyu_handler(self, message: Message):
+        image_api = "https://api.vvhan.com/api/moyu?type=json"
+        res = requests.get(image_api)
+        res_json = res.json()
+        image_url = res_json['url']
+        self.reply_message.image = image_url
+        today = datetime.date.today()
+        self.reply_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
 
     # 签到请求处理，返回签到结果
     def sign_in_op_handler(self, message: Message):

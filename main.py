@@ -28,11 +28,8 @@ pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
 robot_version = "4.0.2"
 
 
-
 token = qqbot.Token(appid, access_token)
 ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
-
-
 
 
 def TimeStampToTime(timestamp):
@@ -125,22 +122,6 @@ def _at_message_handler(event, message: Message):
         update_time = get_file_modified_time("pixiv_src.csv")
         hello_message.content = "Script Version: %s\nIllustration Database Update Time: %s" % (robot_version, update_time)
 
-    # 摸鱼日历功能
-    elif message.content.find("/moyu") != -1:
-        qqbot.logger.info("Recognized command moyu")
-        image_api = "https://api.vvhan.com/api/moyu?type=json"
-        res = requests.get(image_api)
-        res_json = res.json()
-        image_url = res_json['url']
-        hello_message.image = image_url
-        today = datetime.date.today()
-        hello_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
-
-    # 关机功能
-    elif message.content.find("shutdown") != -1:
-        qqbot.logger.info("Recognized command shutdown")
-        exit(0)
-
     elif message.content.find("/help") != -1:
         qqbot.logger.info("Recognized command help")
         hello_message.content = "欢迎使用Ayaki，以下是我的使用说明：\n" + \
@@ -231,6 +212,9 @@ class AyakiClient(botpy.Client):
         elif "/sese" in message.content:
             _log.info(f"Recognized command sese")
             reply = self.handler.sese_handler(message=message)
+        elif "/moyu" in message.content:
+            _log.info(f"Recognized command moyu")
+            reply = self.handler.moyu_handler(message=message)
         await self.api.post_message(channel_id=message.channel_id,
                                     content=reply.content,
                                     image=reply.image,
