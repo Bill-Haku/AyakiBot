@@ -1,6 +1,6 @@
 import random
 
-import qqbot    #已废弃
+import qqbot  # 已废弃
 import botpy
 import features
 import requests
@@ -8,12 +8,14 @@ import datetime
 import time
 import os
 import _thread
+import threading
 import platform
 import schedule as sch
 from qqbot import *
 from botpy.message import *
 from features import *
 from pixivpy3 import *
+from threading import Thread
 
 appid = "102005740"
 sandboxid = 4294837189
@@ -27,14 +29,13 @@ pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
 pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
 robot_version = "4.0.2"
 
-
 token = qqbot.Token(appid, access_token)
 ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
 
 
 def TimeStampToTime(timestamp):
     timeStruct = time.localtime(timestamp)
-    return time.strftime('%Y-%m-%d %H:%M:%S',timeStruct)
+    return time.strftime('%Y-%m-%d %H:%M:%S', timeStruct)
 
 
 def get_file_modified_time(filePath):
@@ -65,11 +66,17 @@ def send_moyu_cal():
             qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
 
 
-def _moyu_handler():
+def _moyu_handler(thread_name):
+    _log.info("Start moyu handler")
     sch.every().day.at("09:00").do(send_moyu_cal)
+    cnt = 3
     while True:
         sch.run_pending()
         time.sleep(1)
+        if cnt > 0:
+            cnt -= 1
+            _log.info("moyu handler running")
+    thread_name.exit()
 
 
 # 群中被at的回复
@@ -118,7 +125,8 @@ def _direct_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
     # 打印返回信息
     qqbot.logger.info(
-        "event %s" % event + ", receive direct message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
+        "event %s" % event + ", receive direct message %s" % message.content + ", came from %s-%s" % (
+        message.author.id, message.author.username))
     qqbot.logger.info("Recognized command default")
     hello_message.content = "你好%s! 我是Ayaki，请多指教! 当前版本：%s" % (message.author.username, robot_version)
     hello_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
@@ -189,6 +197,38 @@ class AyakiClient(botpy.Client):
         else:
             _log.info("Undefined command")
 
+
+def start_general_event_handler():
+    _log.info("Start general event handler")
+    intents = botpy.Intents(public_guild_messages=True)
+    client = AyakiClient(intents=intents)
+    client.run(appid=appid, token=access_token)
+    while True:
+        pass
+
+
+class AyakiThread(Thread):
+    def __init__(self, threadID, name, delay):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.delay = delay
+
+    def run(self):
+        start_general_event_handler()
+
+
+class AyakiMoyuThread(Thread):
+    def __init__(self, threadID, name, delay):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.delay = delay
+
+    def run(self):
+        _moyu_handler(self.name)
+
+
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
     user = userApi.me()
@@ -197,10 +237,21 @@ if __name__ == '__main__':
     qqbot.logger.info("Platform: %s" % platform.platform())
     qqbot.logger.info("Python version: %s" % platform.python_version())
 
-    intents = botpy.Intents(public_guild_messages=True)
-    client = AyakiClient(intents=intents)
-    _thread.start_new_thread(_moyu_handler())
-    client.run(appid=appid, token=access_token)
+    try:
+        # _thread.start_new_thread(start_general_event_handler(), ())
+        # _thread.start_new_thread(_moyu_handler(), ())
+        # general_thread = AyakiThread(1, "general_thread", 1)
+        moyu_thread = AyakiMoyuThread(2, "moyu_thread", 1)
+        # general_thread.start()
+        moyu_thread.start()
+        # general_thread.join()
+        start_general_event_handler()
+        moyu_thread.join()
+    except Exception as err:
+        _log.error(err)
+
+    while 1:
+        pass
 
     # ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
     # ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
