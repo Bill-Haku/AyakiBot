@@ -1,6 +1,9 @@
 import botpy
+from botpy import *
 from botpy.message import *
-from botpy.client import *
+
+
+_log = logging.get_logger()
 
 
 class MessageReply():
