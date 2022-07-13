@@ -72,21 +72,6 @@ def _moyu_handler():
         time.sleep(1)
 
 
-def _get_seremain():
-    cnt = 0
-    try:
-        with open("pixiv_src.csv", "r") as src:
-            for line in src.readlines():
-                values = line.split(',')
-                have_used = int(values[3])
-                if have_used == 0:
-                    cnt += 1
-    except Exception as err:
-        cnt = -1
-        qqbot.logger.error("Get seremain fail, " + str(err))
-    return cnt
-
-
 # 群中被at的回复
 def _at_message_handler(event, message: Message):
     hello_message = MessageSendRequest()
@@ -102,25 +87,6 @@ def _at_message_handler(event, message: Message):
             hello_message.content = "我也爱你哦"
         else:
             hello_message.content = "对不起，你是个好人。"
-
-    # 发送程序相关信息
-    elif message.content.find("/info") != -1:
-        qqbot.logger.info("Recognized command info")
-        remain = _get_seremain()
-        if remain >= 0:
-            remain_info = "%d" % remain
-            qqbot.logger.info("Get remain success, remain %d" % remain)
-        else:
-            remain_info = "获取失败"
-            qqbot.logger.warning("Get sese image database remain fail")
-        hello_message.content = "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
-                                "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
-
-    # 版本信息功能
-    elif message.content.find("/ver") != -1:
-        qqbot.logger.info("Recognized command version")
-        update_time = get_file_modified_time("pixiv_src.csv")
-        hello_message.content = "Script Version: %s\nIllustration Database Update Time: %s" % (robot_version, update_time)
 
     elif message.content.find("/help") != -1:
         qqbot.logger.info("Recognized command help")
@@ -218,9 +184,9 @@ class AyakiClient(botpy.Client):
         await self.api.post_message(channel_id=message.channel_id,
                                     content=reply.content,
                                     image=reply.image,
-                                    message_reference=reply.message_reference,
+                                    message_reference=reply.reference,
                                     msg_id=message.id)
-        _log.info(f"Replied {reply.content} SUCCESS")
+        _log.info("Reply SUCCESS")
 
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)

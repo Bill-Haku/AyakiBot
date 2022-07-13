@@ -3,6 +3,7 @@ import random
 import datetime
 import os
 import requests
+import platform
 from botpy import *
 from botpy.message import *
 from botpy.types.message import *
@@ -11,14 +12,14 @@ from botpy.types.message import *
 _log = logging.get_logger()
 
 
-class MessageReply():
+class MessageReply:
     def __init__(self, content=None, image=None, reference=None):
         self.content = content
         self.image = image
         self.reference = reference
 
 
-class AyakiFeaturesHandler():
+class AyakiFeaturesHandler:
     robot_version = "4.0.2"
     reply_message = MessageReply()
     admin_list = ["14862092315735810791"]
@@ -30,7 +31,17 @@ class AyakiFeaturesHandler():
     online = True
 
     def hello_handler(self, message: Message):
-        self.reply_message.content = "你好%s! 我是Ayaki，请多指教了哦! 当前版本：%s" % (message.author.username, self.robot_version)
+        self.reply_message.content = f"你好{message.author.username}! " \
+                                     f"我是Ayaki，请多指教了哦! 当前版本：{self.robot_version}\n"
+        remain = self._get_seremain()
+        if remain >= 0:
+            remain_info = "%d" % remain
+            _log.info("Get remain success, remain %d" % remain)
+        else:
+            remain_info = "获取失败"
+            _log.warning("Get sese image database remain fail")
+        self.reply_message.content += "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
+                                "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
         self.reply_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
         return self.reply_message
 
@@ -137,10 +148,12 @@ class AyakiFeaturesHandler():
             with open("pixiv_src.csv", "w") as write_src_file:
                 for newline in newlines:
                     write_src_file.write(newline)
+            return self.reply_message
 
         except Exception as err:
             self.reply_message.content = "获取图片失败, " + err
             _log.error("Get sese image fail: %s" % str(err))
+            return self.reply_message
 
     def moyu_handler(self, message: Message):
         image_api = "https://api.vvhan.com/api/moyu?type=json"
@@ -150,6 +163,7 @@ class AyakiFeaturesHandler():
         self.reply_message.image = image_url
         today = datetime.date.today()
         self.reply_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
+        return self.reply_message
 
     # 签到请求处理，返回签到结果
     def sign_in_op_handler(self, message: Message):
@@ -241,3 +255,17 @@ class AyakiFeaturesHandler():
         message += bad
         _log.info("Get all luck success")
         return message
+
+    def _get_seremain(self):
+        cnt = 0
+        try:
+            with open("pixiv_src.csv", "r") as src:
+                for line in src.readlines():
+                    values = line.split(',')
+                    have_used = int(values[3])
+                    if have_used == 0:
+                        cnt += 1
+        except Exception as err:
+            cnt = -1
+            _log.error("Get seremain fail, " + str(err))
+        return cnt
