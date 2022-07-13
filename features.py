@@ -2,10 +2,11 @@ import botpy
 from botpy.message import *
 from botpy.client import *
 
+
 class MessageReply():
-    def __init__(self, message, reply):
-        self.message = message
-        self.reply = reply
+    def __init__(self, content=None, image=None):
+        self.content = content
+        self.image = image
 
 
 class AyakiFeaturesHandler():

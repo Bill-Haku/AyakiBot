@@ -405,12 +405,17 @@ _log = logging.get_logger()
 
 
 class AyakiClient(botpy.Client):
+    handler = AyakiFeaturesHandler()
+
     async def on_ready(self):
         _log.info(f"{self.robot.name} is ready!")
 
     async def on_at_message_create(self, message: Message):
         _log.info(f"At message {message.content} came from {message.author.username} - {message.author.id}")
-        await self.api.post_message(channel_id=message.channel_id, content=f"{message.author.username}，你好！SDK正在更新中，请稍后使用。")
+        reply = MessageReply(content=f"{message.author.username}，你好！SDK正在更新中。")
+        if "/hello" in message.content:
+            reply = self.handler.hello_handler(message=message)
+        await self.api.post_message(channel_id=message.channel_id, content=reply.content, msg_id=message.id)
 
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
