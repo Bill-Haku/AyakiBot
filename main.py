@@ -130,6 +130,15 @@ def _direct_message_handler(event, message: Message):
 _log = logging.get_logger()
 
 
+def check_reply_sendable(reply: MessageReply):
+    if reply.content is not None:
+        return True
+    elif reply.image is not None:
+        return True
+    else:
+        return False
+
+
 class AyakiClient(botpy.Client):
     handler = AyakiFeaturesHandler()
 
@@ -151,7 +160,7 @@ class AyakiClient(botpy.Client):
             else:
                 return
 
-        reply = MessageReply(content=f"{message.author.username}，你好！SDK正在更新中。")
+        reply = MessageReply()
         if "/hello" in message.content:
             _log.info(f"Recognized command hello")
             reply = self.handler.hello_handler(message=message)
@@ -170,28 +179,30 @@ class AyakiClient(botpy.Client):
         elif "/help" in message.content:
             _log.info(f"Recognized command help")
             reply = self.handler.help_handler(message=message)
-        await self.api.post_message(channel_id=message.channel_id,
-                                    content=reply.content,
-                                    image=reply.image,
-                                    message_reference=reply.reference,
-                                    msg_id=message.id)
-        _log.info("Reply SUCCESS")
+        if check_reply_sendable(reply):
+            await self.api.post_message(channel_id=message.channel_id,
+                                        content=reply.content,
+                                        image=reply.image,
+                                        message_reference=reply.reference,
+                                        msg_id=message.id)
+            _log.info("Reply SUCCESS")
+        else:
+            _log.info("Undefined command")
 
 if __name__ == '__main__':
     userApi = qqbot.UserAPI(token, False)
     user = userApi.me()
     # 打印机器人名字
-    qqbot.logger.info("Starting %s..." % user.username)
+    qqbot.logger.info("Starting %s(Ver.%s)..." % (user.username, robot_version))
     qqbot.logger.info("Platform: %s" % platform.platform())
     qqbot.logger.info("Python version: %s" % platform.python_version())
 
     intents = botpy.Intents(public_guild_messages=True)
     client = AyakiClient(intents=intents)
+    _thread.start_new_thread(_moyu_handler())
     client.run(appid=appid, token=access_token)
 
     # ayaki_at_message_handler = qqbot.Handler(qqbot.HandlerType.AT_MESSAGE_EVENT_HANDLER, _at_message_handler)
     # ayaki_direct_message_handler = qqbot.Handler(qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _direct_message_handler)
     # qqbot.listen_events(token, False, ayaki_at_message_handler)
     # qqbot.listen_events(token, False, ayaki_direct_message_handler)
-    qqbot.logger.info("%s start complete, current version %s" % (user.username, robot_version))
-    # _thread.start_new_thread(_moyu_handler())
