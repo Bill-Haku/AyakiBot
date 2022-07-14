@@ -146,3 +146,4 @@ chromedriver
 *.csv
 test.py
 pixiv_src.bak
+config.yaml

@@ -7,8 +7,9 @@ import platform
 from botpy import *
 from botpy.message import *
 from botpy.types.message import *
+from botpy.ext.cog_yaml import read
 
-
+config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
 _log = logging.get_logger()
 
 
@@ -25,14 +26,14 @@ class MessageReply:
 
 
 class AyakiFeaturesHandler:
-    robot_version = "4.0.5"
+    robot_version = config["robot_version"]
     reply_message = MessageReply()
-    admin_list = ["14862092315735810791"]
-    ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
-    unsei_list = ["★★★大吉★★★", "★★中吉★★", "★小吉★", "吉", "末吉", "凶", "大凶"]
-    liuhantangtang_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg"
-    liuhantutu_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg"
-    baochaoaoao_url = "http://image.hakubill.tech:1234/images/2022/07/04/IMG_2643.jpg"
+    admin_list = config["admin_list"]
+    ayaki_logo_url = config["ayaki_logo_url"]
+    unsei_list = config["unsei_list"]
+    liuhantangtang_url = config["liuhantangtang_url"]
+    liuhantutu_url = config["liuhantutu_url"]
+    baochaoaoao_url = config["baochaoaoao_url"]
     online = True
 
     def hello_handler(self, message: Message):

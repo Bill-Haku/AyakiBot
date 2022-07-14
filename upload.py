@@ -6,10 +6,10 @@ import base64
 import os
 from pixivpy3 import *
 from PIL import Image
+from botpy.ext.cog_yaml import read
 
-pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
-pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
 sent_image_list = []
+config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
 
 
 def get_sent_image_list():
@@ -49,7 +49,7 @@ def _upload_pixiv_image():
     get_sent_image_list()
     # print(sent_image_list)
     pixiv_api = AppPixivAPI()
-    pixiv_api.auth(refresh_token=pixiv_refresh_token)
+    pixiv_api.auth(refresh_token=config["pixiv_refresh_token"])
 
     pixiv_json_result = pixiv_api.illust_ranking('day')
     illusts = pixiv_json_result.illusts

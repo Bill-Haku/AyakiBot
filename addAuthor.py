@@ -14,15 +14,16 @@ from qqbot import *
 from pixivpy3 import *
 from PIL import Image
 from pixivpy3 import *
+from botpy.ext.cog_yaml import read
 
-pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
-pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
+config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
+
 
 def addAuthor():
     havesent = False
     newlines = []
     pixiv_api = AppPixivAPI()
-    pixiv_api.auth(refresh_token=pixiv_refresh_token)
+    pixiv_api.auth(refresh_token=config["pixiv_refresh_token"])
     with open("pixiv_src.csv", "r") as img_src_file:
         for line in img_src_file.readlines():
             if line == "":
