@@ -25,7 +25,7 @@ class MessageReply:
 
 
 class AyakiFeaturesHandler:
-    robot_version = "4.0.3"
+    robot_version = "4.0.5"
     reply_message = MessageReply()
     admin_list = ["14862092315735810791"]
     ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
