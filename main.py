@@ -1,28 +1,19 @@
-import random
-
-import qqbot  # 已废弃
+import os
+import qqbot
+import botpy
 import time
 import threading
 import schedule as sch
 from qqbot import *
-from botpy import *
+from botpy import logging
+from botpy.ext.cog_yaml import read
 from features import *
 from threading import Thread
 
-appid = "102005740"
-sandboxid = 4294837189
-guildid = "5440859059313954953"  # 之外语文
-test_channel_id = "5463311"
-sesephoto_channel_id = "3613561"
-nichijou_channel_id = "3613272"
-access_token = "jIhM72IaFkMZmi8X8KIgxCzr6HbIiEgi"
-access_secret = "QSGtIVUIsITWKxLX"
-pixiv_access_token = "2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI"
-pixiv_refresh_token = "XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg"
-robot_version = "4.0.5"
+config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
 
-token = qqbot.Token(appid, access_token)
-ayaki_logo_url = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
+token = qqbot.Token(config["appid"], config["access_token"])
+_log = logging.get_logger()
 
 
 class AyakiThread(Thread):
@@ -69,7 +60,7 @@ def send_moyu_cal():
     send_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
     msg_api = qqbot.MessageAPI(token, False, timeout=10)
     try:
-        msg_api.post_message(nichijou_channel_id, send_message)
+        msg_api.post_message(config["jou_channel_id"], send_message)
         _log.info("Send message success")
     except Exception as err:
         _log.error("Send message error: %s, now try again" % str(err))
@@ -81,9 +72,6 @@ def _moyu_handler(thread_name):
     while True:
         sch.run_pending()
         time.sleep(1)
-
-
-_log = logging.get_logger()
 
 
 def check_reply_sendable(reply: MessageReply):
@@ -152,14 +140,14 @@ def start_general_event_handler():
     _log.info("Start general event handler")
     intents = botpy.Intents(public_guild_messages=True)
     client = AyakiClient(intents=intents)
-    client.run(appid=appid, token=access_token)
+    client.run(appid=config["appid"], token=config["access_token"])
     while True:
         pass
 
 
 if __name__ == '__main__':
     # 打印机器人名字
-    _log.info("Starting Ayaki(Ver.%s)..." % robot_version)
+    _log.info("Starting Ayaki(Ver.%s)..." % config["robot_version"])
     _log.info("Platform: %s" % platform.platform())
     _log.info("Python version: %s" % platform.python_version())
 
