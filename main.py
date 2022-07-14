@@ -1,20 +1,12 @@
 import random
 
 import qqbot  # 已废弃
-import botpy
-import features
-import requests
-import datetime
 import time
-import os
-import _thread
 import threading
-import platform
 import schedule as sch
 from qqbot import *
 from botpy.message import *
 from features import *
-from pixivpy3 import *
 from threading import Thread
 
 appid = "102005740"
@@ -77,62 +69,6 @@ def _moyu_handler(thread_name):
             cnt -= 1
             _log.info("moyu handler running")
     thread_name.exit()
-
-
-# 群中被at的回复
-def _at_message_handler(event, message: Message):
-    hello_message = MessageSendRequest()
-    # 打印返回信息
-    qqbot.logger.info(
-        "receive at message %s" % message.content + ", came from %s-%s" % (message.author.id, message.author.username))
-
-    undefined_command = False
-
-    if message.content.find("爱你") != -1 or message.content.find("love you") != -1:
-        qqbot.logger.info("Recognized command love you")
-        if message.author.username == "水里的碳酸钙":
-            hello_message.content = "我也爱你哦"
-        else:
-            hello_message.content = "对不起，你是个好人。"
-
-    else:
-        qqbot.logger.info("Undefined command")
-        undefined_command = True
-
-    if not undefined_command:
-        hello_message.msg_id = message.id
-        msg_api = qqbot.MessageAPI(token, False, timeout=10)
-        try:
-            msg_api.post_message(message.channel_id, hello_message)
-            qqbot.logger.info("Send message success")
-        except Exception as err:
-            qqbot.logger.error("Send message error: %s, now try again" % str(err))
-            try:
-                msg_api.post_message(message.channel_id, hello_message)
-                qqbot.logger.info("Send message success")
-            except Exception as err2:
-                qqbot.logger.error("Send message error: %s, try again fail" % str(err2))
-                try:
-                    time.sleep(1)
-                    msg_api.post_message(message.channel_id, hello_message)
-                    qqbot.logger.info("Send message success")
-                except Exception as err3:
-                    qqbot.logger.error("Send message error: %s, try again again fail" % str(err3))
-
-
-# 私信回复
-def _direct_message_handler(event, message: Message):
-    hello_message = MessageSendRequest()
-    # 打印返回信息
-    qqbot.logger.info(
-        "event %s" % event + ", receive direct message %s" % message.content + ", came from %s-%s" % (
-        message.author.id, message.author.username))
-    qqbot.logger.info("Recognized command default")
-    hello_message.content = "你好%s! 我是Ayaki，请多指教! 当前版本：%s" % (message.author.username, robot_version)
-    hello_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
-    hello_message.msg_id = message.id
-    dms_api = qqbot.DmsAPI(token, False, timeout=10)
-    dms_api.post_direct_message(message.guild_id, hello_message)
 
 
 _log = logging.get_logger()
