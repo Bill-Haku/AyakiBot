@@ -48,7 +48,7 @@ class AyakiFeaturesHandler:
             _log.warning("Get sese image database remain fail")
         self.reply_message.content += "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
                                 "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
-        self.reply_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
+#        self.reply_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
         return self.reply_message
 
     def shutdown_handler(self, message: Message):
@@ -90,76 +90,78 @@ class AyakiFeaturesHandler:
             # 将ID添加到今日签到列表中
             with open(sign_in_list_name, mode="a") as list_file:
                 list_file.write(message.author.id + '\n')
-        if self.reply_message.content.find("流汗糖豆") != -1:
-            self.reply_message.image = self.liuhantangtang_url
-        elif self.reply_message.content.find("爆炒🍬🍬") != -1:
-            self.reply_message.image = self.liuhantangtang_url
-        elif self.reply_message.content.find("流汗土豆") != -1:
-            self.reply_message.image = self.liuhantutu_url
-        elif self.reply_message.content.find("爆炒土土") != -1:
-            self.reply_message.image = self.liuhantutu_url
-        elif self.reply_message.content.find("爆炒奥奥") != -1:
-            self.reply_message.image = self.baochaoaoao_url
+#        if self.reply_message.content.find("流汗糖豆") != -1:
+#            self.reply_message.image = self.liuhantangtang_url
+#        elif self.reply_message.content.find("爆炒🍬🍬") != -1:
+#            self.reply_message.image = self.liuhantangtang_url
+#        elif self.reply_message.content.find("流汗土豆") != -1:
+#            self.reply_message.image = self.liuhantutu_url
+#        elif self.reply_message.content.find("爆炒土土") != -1:
+#            self.reply_message.image = self.liuhantutu_url
+#        elif self.reply_message.content.find("爆炒奥奥") != -1:
+#            self.reply_message.image = self.baochaoaoao_url
         msg_reference = Reference(message_id=message.id)
         self.reply_message.message_reference = msg_reference
         return self.reply_message
     
     def sese_handler(self, message: Message):
-        try:
-            newlines = []
-            havesent = False
-            with open("pixiv_src.csv", "r") as img_src_file:
-                for line in img_src_file.readlines():
-                    if line == "":
-                        continue
-                    if not havesent:
-                        values = line.split(',')
-                        try:
-                            img_id = values[0]
-                            img_origin_url = values[1]
-                            img_url = values[2]
-                            have_used = int(values[3])
-                            if have_used == 1:
-                                newlines.append(line)
-                                continue
-                        except Exception as err:
-                            _log.error("read line value error: " + str(err))
-                            continue
-                        try:
-                            title = values[4]
-                        except Exception:
-                            title = "暂无标题信息\n"
-                            _log.info("Title of %s found nil" % img_id)
-                        try:
-                            author = values[5]
-                        except Exception:
-                            author = "暂无画师信息\n"
-                            _log.info("Author of %s found nil" % img_id)
-                        self.reply_message.content = "PID: " + img_id + ", " + title + ", 画师：" + author
-                        if img_url != img_origin_url:
-                            self.reply_message.content += "(原图由于过大已被压缩过)"
-                        self.reply_message.image = img_url
-                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "," + author
-                        newlines.append(new_csv_info)
-                        havesent = True
-                        _log.info("Found available image %s" % img_id)
-                    else:
-                        newlines.append(line)
-
-                if not havesent:
-                    _log.warning("Sese image database found empty")
-                    self.reply_message.content = "图库已用尽，请联系<@14862092315735810791>"
-
-            # 写回新的资源表
-            with open("pixiv_src.csv", "w") as write_src_file:
-                for newline in newlines:
-                    write_src_file.write(newline)
-            return self.reply_message
-
-        except Exception as err:
-            self.reply_message.content = "获取图片失败, " + err
-            _log.error("Get sese image fail: %s" % str(err))
-            return self.reply_message
+        self.reply_message.content = "该功能暂时下线。详见频道全局公告。"
+        return self.reply_message
+#        try:
+#            newlines = []
+#            havesent = False
+#            with open("pixiv_src.csv", "r") as img_src_file:
+#                for line in img_src_file.readlines():
+#                    if line == "":
+#                        continue
+#                    if not havesent:
+#                        values = line.split(',')
+#                        try:
+#                            img_id = values[0]
+#                            img_origin_url = values[1]
+#                            img_url = values[2]
+#                            have_used = int(values[3])
+#                            if have_used == 1:
+#                                newlines.append(line)
+#                                continue
+#                        except Exception as err:
+#                            _log.error("read line value error: " + str(err))
+#                            continue
+#                        try:
+#                            title = values[4]
+#                        except Exception:
+#                            title = "暂无标题信息\n"
+#                            _log.info("Title of %s found nil" % img_id)
+#                        try:
+#                            author = values[5]
+#                        except Exception:
+#                            author = "暂无画师信息\n"
+#                            _log.info("Author of %s found nil" % img_id)
+#                        self.reply_message.content = "PID: " + img_id + ", " + title + ", 画师：" + author
+#                        if img_url != img_origin_url:
+#                            self.reply_message.content += "(原图由于过大已被压缩过)"
+#                        self.reply_message.image = img_url
+#                        new_csv_info = img_id + "," + img_origin_url + "," + img_url + ",1," + title + "," + author
+#                        newlines.append(new_csv_info)
+#                        havesent = True
+#                        _log.info("Found available image %s" % img_id)
+#                    else:
+#                        newlines.append(line)
+#
+#                if not havesent:
+#                    _log.warning("Sese image database found empty")
+#                    self.reply_message.content = "图库已用尽，请联系<@14862092315735810791>"
+#
+#            # 写回新的资源表
+#            with open("pixiv_src.csv", "w") as write_src_file:
+#                for newline in newlines:
+#                    write_src_file.write(newline)
+#            return self.reply_message
+#
+#        except Exception as err:
+#            self.reply_message.content = "获取图片失败, " + err
+#            _log.error("Get sese image fail: %s" % str(err))
+#            return self.reply_message
 
     def moyu_handler(self, message: Message):
         image_api = "https://api.vvhan.com/api/moyu?type=json"
