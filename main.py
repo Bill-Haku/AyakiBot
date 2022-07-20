@@ -124,12 +124,20 @@ class AyakiClient(botpy.Client):
             _log.info(f"Recognized command help")
             reply = self.handler.help_handler(message=message)
         if check_reply_sendable(reply):
-            await self.api.post_message(channel_id=message.channel_id,
-                                        content=reply.content,
-                                        image=reply.image,
-                                        message_reference=reply.reference,
-                                        msg_id=message.id)
-            _log.info("Reply SUCCESS")
+            try:
+                await self.api.post_message(channel_id=message.channel_id,
+                                            content=reply.content,
+                                            image=reply.image,
+                                            message_reference=reply.reference,
+                                            msg_id=message.id)
+                _log.info("Reply SUCCESS")
+            except Exception as err:
+                _log.error("Reply FAIL")
+                reply.reset()
+                reply.content = f"嘤嘤，由于{str(err)}，消息被狗吃了，再试一下吧。"
+                await self.api.post_message(channel_id=message.channel_id,
+                                            content=reply.content,
+                                            msg_id=message.id)
             reply.reset()
         else:
             _log.info("Undefined command")
