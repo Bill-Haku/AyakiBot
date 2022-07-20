@@ -303,11 +303,16 @@ class AyakiFeaturesHandler:
         return message
 
     def waifu_sign_in_op_handler(self, message: Message):
-        waifu_list = config["waifu_list"]
-        waifu_index = random.randint(0, len(waifu_list) - 1)
-        self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
-        self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
-        self.reply_message.image = waifu_list[waifu_index]['url']
+        if message.author.id == config["tutu_id"]:
+            _log.info("Get tutu's waifu request")
+            self.reply_message.content = f"<@{message.author.id}> 喂！你的老婆永远是🍬🍬！"
+            self.reply_message.image = config["liuhantangtang_url"]
+        else:
+            waifu_list = config["waifu_list"]
+            waifu_index = random.randint(0, len(waifu_list) - 1)
+            self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
+            self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
+            self.reply_message.image = waifu_list[waifu_index]['url']
         _log.info("Get today' waifu success")
 
 
