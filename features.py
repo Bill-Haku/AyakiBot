@@ -186,28 +186,28 @@ class AyakiFeaturesHandler:
     def waifu_handler(self, message: Message):
         # 读取今日老婆签到列表
         today = datetime.date.today()
-        sign_in_list_name = "waifu_sign_in_list_%s" % today
-        sign_in_list = []
-        if os.path.exists(sign_in_list_name):
-            with open(sign_in_list_name, mode='r') as list:
+        waifu_sign_in_list_name = "waifu_sign_in_list_%s" % today
+        waifu_sign_in_list = []
+        if os.path.exists(waifu_sign_in_list_name):
+            with open(waifu_sign_in_list_name, mode='r') as list:
                 for line in list.readlines():
-                    sign_in_list.append(line.replace('\n', ''))
-            if message.author.id in sign_in_list:
+                    waifu_sign_in_list.append(line.replace('\n', ''))
+            if message.author.id in waifu_sign_in_list:
                 # 用户ID已签到
                 self.reply_message.content = "<@%s>，你今天已经有老婆了！" % message.author.id
             else:
                 # 获取今日老婆
                 self.waifu_sign_in_op_handler(message)
                 # 将ID添加到老婆今日签到列表中
-                with open(sign_in_list_name, mode="a") as list_file:
+                with open(waifu_sign_in_list_name, mode="a") as list_file:
                     list_file.write(message.author.id + '\n')
         else:
-            with open(sign_in_list_name, mode='w') as ff:
+            with open(waifu_sign_in_list_name, mode='w') as ff:
                 _log.info("Create today's sign in list success")
             # 获取今日老婆
             self.waifu_sign_in_op_handler(message)
             # 将ID添加到今日老婆签到列表中
-            with open(sign_in_list_name, mode="a") as list_file:
+            with open(waifu_sign_in_list_name, mode="a") as list_file:
                 list_file.write(message.author.id + '\n')
         return self.reply_message
 
@@ -303,6 +303,11 @@ class AyakiFeaturesHandler:
         return message
 
     def waifu_sign_in_op_handler(self, message: Message):
+        waifu_list = config["waifu_list"]
+        waifu_index = random.randint(0, len(waifu_list) - 1)
+        self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
+        self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
+        self.reply_message.image = waifu_list[waifu_index]['url']
 
 
     def _get_seremain(self):
