@@ -75,7 +75,7 @@ class AyakiFeaturesHandler:
                     sign_in_list.append(line.replace('\n', ''))
             if message.author.id in sign_in_list:
                 # 用户ID已签到
-                self.reply_message.content = "%s，你今天已经签到了哦QAQ！" % message.author.username
+                self.reply_message.content = "<@%s>，你今天已经签到了哦QAQ！" % message.author.id
             else:
                 # 签到
                 self.reply_message.content = self.sign_in_op_handler(message)
@@ -265,7 +265,7 @@ class AyakiFeaturesHandler:
                 bad += events_list[index].replace('\n', '')
                 bad += "  "
 
-        message = "@%s 签到成功!\n" % message.author.username
+        message = "<@%s> 签到成功!\n" % message.author.id
         today = datetime.date.today()
         message += "今天是%s\n" % today
         message += "今日运势: %s\n" % unsei
