@@ -120,6 +120,9 @@ class AyakiClient(botpy.Client):
         elif "/moyu" in message.content:
             _log.info(f"Recognized command moyu")
             reply = self.handler.moyu_handler(message=message)
+        elif "/waifu" in message.content:
+            _log.info(f"Recognized command waifu")
+            reply = self.handler.waifu_handler(message=message)
         elif "/help" in message.content:
             _log.info(f"Recognized command help")
             reply = self.handler.help_handler(message=message)

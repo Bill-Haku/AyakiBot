@@ -183,6 +183,34 @@ class AyakiFeaturesHandler:
                                 "/moyu：再次发送今天的摸鱼日历。人活着就是为了摸鱼。\n "
         return self.reply_message
 
+    def waifu_handler(self, message: Message):
+        # 读取今日老婆签到列表
+        today = datetime.date.today()
+        sign_in_list_name = "waifu_sign_in_list_%s" % today
+        sign_in_list = []
+        if os.path.exists(sign_in_list_name):
+            with open(sign_in_list_name, mode='r') as list:
+                for line in list.readlines():
+                    sign_in_list.append(line.replace('\n', ''))
+            if message.author.id in sign_in_list:
+                # 用户ID已签到
+                self.reply_message.content = "<@%s>，你今天已经有老婆了！" % message.author.id
+            else:
+                # 获取今日老婆
+                self.waifu_sign_in_op_handler(message)
+                # 将ID添加到老婆今日签到列表中
+                with open(sign_in_list_name, mode="a") as list_file:
+                    list_file.write(message.author.id + '\n')
+        else:
+            with open(sign_in_list_name, mode='w') as ff:
+                _log.info("Create today's sign in list success")
+            # 获取今日老婆
+            self.waifu_sign_in_op_handler(message)
+            # 将ID添加到今日老婆签到列表中
+            with open(sign_in_list_name, mode="a") as list_file:
+                list_file.write(message.author.id + '\n')
+        return self.reply_message
+
     # 签到请求处理，返回签到结果
     def sign_in_op_handler(self, message: Message):
         # 随机获得吉等级
@@ -273,6 +301,9 @@ class AyakiFeaturesHandler:
         message += bad
         _log.info("Get all luck success")
         return message
+
+    def waifu_sign_in_op_handler(self, message: Message):
+
 
     def _get_seremain(self):
         cnt = 0
