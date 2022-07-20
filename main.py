@@ -60,7 +60,7 @@ def send_moyu_cal():
     send_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
     msg_api = qqbot.MessageAPI(token, False, timeout=10)
     try:
-        msg_api.post_message(config["jou_channel_id"], send_message)
+        msg_api.post_message(config["nichijou_channel_id"], send_message)
         _log.info("Send message success")
     except Exception as err:
         _log.error("Send message error: %s, now try again" % str(err))
