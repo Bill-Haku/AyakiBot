@@ -203,7 +203,7 @@ class AyakiFeaturesHandler:
                     list_file.write(message.author.id + '\n')
         else:
             with open(waifu_sign_in_list_name, mode='w') as ff:
-                _log.info("Create today's sign in list success")
+                _log.info("Create today's waifu sign in list success")
             # 获取今日老婆
             self.waifu_sign_in_op_handler(message)
             # 将ID添加到今日老婆签到列表中
@@ -308,6 +308,7 @@ class AyakiFeaturesHandler:
         self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
         self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
         self.reply_message.image = waifu_list[waifu_index]['url']
+        _log.info("Get today' waifu success")
 
 
     def _get_seremain(self):
