@@ -79,6 +79,8 @@ def check_reply_sendable(reply: MessageReply):
         return True
     elif reply.image is not None:
         return True
+    elif reply.ark is not None:
+        return True
     else:
         return False
 

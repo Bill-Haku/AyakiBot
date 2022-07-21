@@ -315,7 +315,7 @@ class AyakiFeaturesHandler:
             # self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
             # self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
             # self.reply_message.image = waifu_list[waifu_index]['url']
-            self.reply_message.ark: Ark = Ark(
+            self.reply_message.ark = Ark(
                 template_id=37,
                 kv=[
                     ArkKv(key="#METATITLE#", value=f"你今天的老婆是{waifu_list[waifu_index]['name']}!"),
