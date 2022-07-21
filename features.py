@@ -14,7 +14,7 @@ _log = logging.get_logger()
 
 
 class MessageReply:
-    def __init__(self, content=None, image=None, reference=None, ark = None):
+    def __init__(self, content=None, image=None, reference=None, ark=None):
         self.content = content
         self.image = image
         self.reference = reference
@@ -312,9 +312,18 @@ class AyakiFeaturesHandler:
         else:
             waifu_list = config["waifu_list"]
             waifu_index = random.randint(0, len(waifu_list) - 1)
-            self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
-            self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
-            self.reply_message.image = waifu_list[waifu_index]['url']
+            # self.reply_message.content = f"<@{message.author.id}> 你今天的老婆是：{waifu_list[waifu_index]['name']}\n"
+            # self.reply_message.content += f"她从{waifu_list[waifu_index]['origin']}来找你啦！"
+            # self.reply_message.image = waifu_list[waifu_index]['url']
+            self.reply_message.ark: Ark = Ark(
+                template_id=37,
+                kv=[
+                    ArkKv(key="#METATITLE#", value=f"你今天的老婆是{waifu_list[waifu_index]['name']}!"),
+                    ArkKv(key="#PROMPT#", value="今日老婆"),
+                    ArkKv(key="METASUBTITLE#", value=f"她从{waifu_list[waifu_index]['origin']}来找你啦！"),
+                    ArkKv(key="METACOVER#", value=waifu_list[waifu_index]['url']),
+                ]
+            )
         _log.info("Get today' waifu success")
 
 

@@ -132,6 +132,7 @@ class AyakiClient(botpy.Client):
                                             content=reply.content,
                                             image=reply.image,
                                             message_reference=reply.reference,
+                                            ark=reply.ark,
                                             msg_id=message.id)
                 _log.info("Reply SUCCESS")
             except Exception as err:
