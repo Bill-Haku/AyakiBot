@@ -14,15 +14,17 @@ _log = logging.get_logger()
 
 
 class MessageReply:
-    def __init__(self, content=None, image=None, reference=None):
+    def __init__(self, content=None, image=None, reference=None, ark = None):
         self.content = content
         self.image = image
         self.reference = reference
+        self.ark = ark
 
     def reset(self):
         self.content = None
         self.image = None
         self.reference = None
+        self.ark = None
 
 
 class AyakiFeaturesHandler:
@@ -303,7 +305,7 @@ class AyakiFeaturesHandler:
         return message
 
     def waifu_sign_in_op_handler(self, message: Message):
-        if message.author.id == config["tutu_id"]:
+        if message.author.id == config["tutu_id"].replace('\n', ''):
             _log.info("Get tutu's waifu request")
             self.reply_message.content = f"<@{message.author.id}> 喂！你的老婆永远是🍬🍬！"
             self.reply_message.image = config["liuhantangtang_url"]
