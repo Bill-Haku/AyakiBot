@@ -87,6 +87,7 @@ def check_reply_sendable(reply: MessageReply):
 
 class AyakiClient(botpy.Client):
     handler = AyakiFeaturesHandler()
+    reply = MessageReply()
 
     async def on_ready(self):
         _log.info(f"{self.robot.name} is ready!")
@@ -98,70 +99,73 @@ class AyakiClient(botpy.Client):
             if "turnon" in message.content:
                 _log.info("Recognized command turnon")
                 if message.author.id in self.handler.admin_list:
-                    reply = self.handler.turnon_handler(message)
-                    await self.api.post_message(channel_id=message.channel_id, content=reply.content, msg_id=message.id)
+                    self.reply = self.handler.turnon_handler(message)
+                    await self.api.post_message(channel_id=message.channel_id, content=self.reply.content, msg_id=message.id)
                     return
                 else:
                     return
             else:
                 return
 
-        reply = MessageReply()
+
         if "/hello" in message.content:
             _log.info(f"Recognized command hello")
-            reply = self.handler.hello_handler(message=message)
+            self.reply = self.handler.hello_handler(message=message)
         elif "/signin" in message.content:
             _log.info(f"Recognized command signin")
-            reply = self.handler.signin_handler(message=message)
+            self.reply = self.handler.signin_handler(message=message)
         elif "shutdown" in message.content:
             _log.info(f"Recognized command shutdown")
-            reply = self.handler.shutdown_handler(message=message)
+            self.reply = self.handler.shutdown_handler(message=message)
         elif "/sese" in message.content:
             _log.info(f"Recognized command sese")
-            reply = self.handler.sese_handler(message=message)
+            self.reply = self.handler.sese_handler(message=message)
         elif "/moyu" in message.content:
             _log.info(f"Recognized command moyu")
-            reply = self.handler.moyu_handler(message=message)
+            self.reply = self.handler.moyu_handler(message=message)
         elif "/waifu" in message.content:
             _log.info(f"Recognized command waifu")
-            reply = self.handler.waifu_handler(message=message)
+            self.reply = self.handler.waifu_handler(message=message)
         elif "/help" in message.content:
             _log.info(f"Recognized command help")
-            reply = self.handler.help_handler(message=message)
+            self.reply = self.handler.help_handler(message=message)
         elif "/chat" in message.content:
             _log.info(f"Recognized command chat")
             if not self.handler.chat_mode:
                 _log.info(f"Start chat mode")
                 self.handler.chat_mode = True
-                reply.content = "Ayaki来陪你聊天了！"
+                self.reply.content = "Ayaki来陪你聊天了！"
             else:
                 _log.info(f"Stop chat mode")
                 self.handler.chat_mode = False
-                reply.content = "聊天就到这吧。"
-        if check_reply_sendable(reply):
-            try:
-                await self.api.post_message(channel_id=message.channel_id,
-                                            content=reply.content,
-                                            image=reply.image,
-                                            message_reference=reply.reference,
-                                            ark=reply.ark,
-                                            msg_id=message.id)
-                _log.info("Reply SUCCESS")
-            except Exception as err:
-                _log.error("Reply FAIL")
-                reply.reset()
-                reply.content = f"嘤嘤，由于{str(err)}，消息被狗吃了，再试一下吧。"
-                await self.api.post_message(channel_id=message.channel_id,
-                                            content=reply.content,
-                                            msg_id=message.id)
-            reply.reset()
+                self.reply.content = "聊天就到这吧。"
+        if check_reply_sendable(self.reply):
+            await self.post_message(message=message)
         else:
             if self.handler.chat_mode:
-                reply = self.handler.chat_handler(message=message)
+                self.reply = self.handler.chat_handler(message=message)
+                await self.post_message(message=message)
             else:
                 _log.info("Undefined command")
-                reply.reset()
+                self.reply.reset()
 
+    async def post_message(self, message: Message):
+        try:
+            await self.api.post_message(channel_id=message.channel_id,
+                                        content=self.reply.content,
+                                        image=self.reply.image,
+                                        message_reference=self.reply.reference,
+                                        ark=self.reply.ark,
+                                        msg_id=message.id)
+            _log.info("Reply SUCCESS")
+        except Exception as err:
+            _log.error("Reply FAIL")
+            self.reply.reset()
+            self.reply.content = f"嘤嘤，由于{str(err)}，消息被狗吃了，再试一下吧。"
+            await self.api.post_message(channel_id=message.channel_id,
+                                        content=self.reply.content,
+                                        msg_id=message.id)
+        self.reply.reset()
 
 def start_general_event_handler():
     _log.info("Start general event handler")
