@@ -222,8 +222,7 @@ class AyakiFeaturesHandler:
             if "谁" in text or "名字" in text:
                 self.reply_message.content = "我是Ayaki，Ayaki是我。"
                 return self.reply_message
-        text = text.replace('{br}', '\n')
-        url = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + text
+        url = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + text.replace('{br}', '\n')
         tuling = requests.get(url)
         content = tuling.json()
         _log.info(f"get reply: {content['content']}")
