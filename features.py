@@ -37,6 +37,8 @@ class AyakiFeaturesHandler:
     liuhantutu_url = config["liuhantutu_url"]
     baochaoaoao_url = config["baochaoaoao_url"]
     online = True
+    # 模式目前有两种模式：普通的默认模式(default)和聊天模式(chat)。聊天模式下会将未识别的指令作为聊天信息输入。
+    chat_mode = False
 
     def hello_handler(self, message: Message):
         self.reply_message.content = f"你好{message.author.username}! " \

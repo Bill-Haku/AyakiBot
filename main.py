@@ -128,6 +128,16 @@ class AyakiClient(botpy.Client):
         elif "/help" in message.content:
             _log.info(f"Recognized command help")
             reply = self.handler.help_handler(message=message)
+        elif "/chat" in message.content:
+            _log.info(f"Recognized command chat")
+            if not self.handler.chat_mode:
+                _log.info(f"Start chat mode")
+                self.handler.chat_mode = True
+                reply.content = "Ayaki来陪你聊天了！"
+            else:
+                _log.info(f"Stop chat mode")
+                self.handler.chat_mode = False
+                reply.content = "聊天就到这吧。"
         if check_reply_sendable(reply):
             try:
                 await self.api.post_message(channel_id=message.channel_id,
@@ -146,8 +156,11 @@ class AyakiClient(botpy.Client):
                                             msg_id=message.id)
             reply.reset()
         else:
-            _log.info("Undefined command")
-            reply.reset()
+            if self.handler.chat_mode:
+                return
+            else:
+                _log.info("Undefined command")
+                reply.reset()
 
 
 def start_general_event_handler():
