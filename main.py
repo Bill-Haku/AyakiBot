@@ -150,8 +150,11 @@ class AyakiClient(botpy.Client):
             _log.info("Undefined command")
             reply.reset()
 
+    # 机器人上麦
     async def on_audio_start(self, audio: Audio):
-        return
+        _log.info(f"Audio start in {audio.channel_id}, {audio.guild_id}")
+        audio_channel_id = config["audio_channel_id"]
+        await self.api.on_microphone(audio_channel_id)
 
 
 def start_general_event_handler():
