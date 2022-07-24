@@ -218,7 +218,10 @@ class AyakiFeaturesHandler:
     def chat_handler(self, message: Message):
         texts = message.content.split(' ')
         text = texts[-1]
-        # TODO: 对"谁"的筛选
+        if "你" in text:
+            if "谁" in text or "名字" in text:
+                self.reply_message.content = "我是Ayaki，Ayaki是我。"
+                return self.reply_message
         text = text.replace('{br}', '\n')
         url = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + text
         tuling = requests.get(url)
