@@ -215,6 +215,17 @@ class AyakiFeaturesHandler:
                 list_file.write(message.author.id + '\n')
         return self.reply_message
 
+    def chat_handler(self, message: Message):
+        texts = message.content.split(' ')
+        text = texts[-1]
+        # TODO: 对"谁"的筛选
+        url = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + text
+        tuling = requests.get(url)
+        content = tuling.json()
+        _log.info(f"get reply: {content['content']}")
+        self.reply_message.content = content['content']
+        return self.reply_message
+
     # 签到请求处理，返回签到结果
     def sign_in_op_handler(self, message: Message):
         # 随机获得吉等级

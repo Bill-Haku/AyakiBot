@@ -157,7 +157,7 @@ class AyakiClient(botpy.Client):
             reply.reset()
         else:
             if self.handler.chat_mode:
-                return
+                reply = self.handler.chat_handler(message=message)
             else:
                 _log.info("Undefined command")
                 reply.reset()
