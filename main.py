@@ -4,6 +4,7 @@ import botpy
 import time
 import threading
 import schedule as sch
+from botpy.audio import Audio
 from qqbot import *
 from botpy import logging
 from botpy.ext.cog_yaml import read
@@ -149,10 +150,13 @@ class AyakiClient(botpy.Client):
             _log.info("Undefined command")
             reply.reset()
 
+    async def on_audio_start(self, audio: Audio):
+        return
+
 
 def start_general_event_handler():
     _log.info("Start general event handler")
-    intents = botpy.Intents(public_guild_messages=True)
+    intents = botpy.Intents(public_guild_messages=True, audio_action=True)
     client = AyakiClient(intents=intents)
     client.run(appid=config["appid"], token=config["access_token"])
     while True:
