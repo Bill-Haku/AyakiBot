@@ -1,0 +1,22 @@
+# Ayaki
+# 以下三项可以从QQBot的后台管理页面获取
+appid: # appid
+access_token: # access token
+access_secret: # access secret
+
+# 以下可选
+sandboxid: # 沙盒频道ID，一般不需要
+guildid:  # 使用的频道的ID
+test_channel_id: # 测试子频道ID
+other_channel_id: # 其他子频道ID
+username_id: # 特殊用户ID
+
+# 管理员ID列表，Ayaki根据此列表执行部分指令
+admin_list:
+  - # administrator ID 1
+  - # administrator ID 2
+
+# Pixiv
+# 用于获取Pixiv日榜的相关鉴权ID
+pixiv_access_token: 2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI
+pixiv_refresh_token: XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg
