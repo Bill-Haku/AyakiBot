@@ -356,9 +356,13 @@ class AyakiFeaturesHandler:
             with open("pixiv_src.csv", "r") as src:
                 for line in src.readlines():
                     values = line.split(',')
-                    have_used = int(values[3])
-                    if have_used == 0:
-                        cnt += 1
+                    try:
+                        have_used = int(values[3])
+                        if have_used == 0:
+                            cnt += 1
+                    except Exception as e:
+                        _log.error(e)
+                        continue
         except Exception as err:
             cnt = -1
             _log.error("Get seremain fail, " + str(err))
