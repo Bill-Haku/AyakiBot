@@ -135,7 +135,7 @@ class AyakiFeaturesHandler:
                         try:
                             title = values[4]
                         except Exception:
-                            title = "暂无标题信息\n"
+                            title = "暂无标题信息"
                             _log.info("Title of %s found nil" % img_id)
                         try:
                             author = values[5]
