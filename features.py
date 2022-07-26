@@ -322,7 +322,7 @@ class AyakiFeaturesHandler:
         return message
 
     def waifu_sign_in_op_handler(self, message: Message):
-        if message.author.id == config["tutu_id"].replace('\n', ''):
+        if message.author.id == private_config["tutu_id"].replace('\n', ''):
             _log.info("Get tutu's waifu request")
             rdnum = random.randint(0, 100)
             if rdnum < 20:
