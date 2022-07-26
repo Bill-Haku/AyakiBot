@@ -159,3 +159,4 @@ chromedriver
 test.py
 *.bak
 private_config.yaml
+up.sh
