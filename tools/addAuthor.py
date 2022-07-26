@@ -16,7 +16,7 @@ from PIL import Image
 from pixivpy3 import *
 from botpy.ext.cog_yaml import read
 
-config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
+config = read(os.path.join(os.path.dirname(__file__), "../config.yaml"))
 
 
 def addAuthor():
@@ -24,7 +24,7 @@ def addAuthor():
     newlines = []
     pixiv_api = AppPixivAPI()
     pixiv_api.auth(refresh_token=config["pixiv_refresh_token"])
-    with open("pixiv_src.csv", "r") as img_src_file:
+    with open("../pixiv_src.csv", "r") as img_src_file:
         for line in img_src_file.readlines():
             if line == "":
                 continue
@@ -72,7 +72,7 @@ def addAuthor():
             print("Sese image database found empty")
 
     # 写回新的资源表
-    # with open("pixiv_src.csv", "w") as write_src_file:
+    # with open("../pixiv_src.csv", "w") as write_src_file:
     #     for newline in newlines:
     #         write_src_file.write(newline)
 
