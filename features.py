@@ -43,7 +43,7 @@ class AyakiFeaturesHandler:
 
     def hello_handler(self, message: Message):
         self.reply_message.content = f"你好{message.author.username}! " \
-                                     f"我是Ayaki，请多指教了哦! 当前版本：{self.robot_version}\n"
+                                     f"我是Ayaki，请多指教了哦!\n当前版本：{self.robot_version}\n"
         remain = self._get_seremain()
         if remain >= 0:
             remain_info = "%d" % remain
@@ -51,8 +51,7 @@ class AyakiFeaturesHandler:
         else:
             remain_info = "获取失败"
             _log.warning("Get sese image database remain fail")
-        self.reply_message.content += "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
-                                "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
+        self.reply_message.content += "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
         self.reply_message.image = self.ayaki_logo_url
         return self.reply_message
 
