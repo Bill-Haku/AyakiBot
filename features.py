@@ -9,6 +9,7 @@ from botpy.message import *
 from botpy.types.message import *
 from botpy.ext.cog_yaml import read
 
+private_config = read(os.path.join(os.path.dirname(__file__), "private_config.yaml"))
 config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
 _log = logging.get_logger()
 
@@ -30,7 +31,7 @@ class MessageReply:
 class AyakiFeaturesHandler:
     robot_version = config["robot_version"]
     reply_message = MessageReply()
-    admin_list = config["admin_list"]
+    admin_list = private_config["admin_list"]
     ayaki_logo_url = config["ayaki_logo_url"]
     unsei_list = config["unsei_list"]
     liuhantangtang_url = config["liuhantangtang_url"]
@@ -52,7 +53,7 @@ class AyakiFeaturesHandler:
             _log.warning("Get sese image database remain fail")
         self.reply_message.content += "At_Message_Handler运行正常\nWeb Socket连接正常\n" \
                                 "运行平台：%s\n图库图片剩余%s" % (platform.platform(), remain_info)
-        self.reply_message.image = "http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png"
+        self.reply_message.image = self.ayaki_logo_url
         return self.reply_message
 
     def shutdown_handler(self, message: Message):

@@ -10,9 +10,11 @@ from botpy.ext.cog_yaml import read
 from features import *
 from threading import Thread
 
+private_config = read(os.path.join(os.path.dirname(__file__), "private_config.yaml"))
 config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
-
-token = qqbot.Token(config["appid"], config["access_token"])
+appid = private_config["appid"]
+access_token = private_config["access_token"]
+token = qqbot.Token(appid, access_token)
 _log = logging.get_logger()
 
 
@@ -60,7 +62,7 @@ def send_moyu_cal():
     send_message.content = "今天是%s，今天也要努力摸鱼鸭！" % today
     msg_api = qqbot.MessageAPI(token, False, timeout=10)
     try:
-        msg_api.post_message(config["nichijou_channel_id"], send_message)
+        msg_api.post_message(private_config["nichijou_channel_id"], send_message)
         _log.info("Send message success")
     except Exception as err:
         _log.error("Send message error: %s, now try again" % str(err))
@@ -171,7 +173,7 @@ def start_general_event_handler():
     _log.info("Start general event handler")
     intents = botpy.Intents(public_guild_messages=True)
     client = AyakiClient(intents=intents)
-    client.run(appid=config["appid"], token=config["access_token"])
+    client.run(appid=appid, token=access_token)
     while True:
         pass
 

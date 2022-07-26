@@ -1,0 +1,60 @@
+# Ayaki General
+robot_version: 4.3.0-alpha.1
+
+# Ayaki Source
+ayaki_logo_url: http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png
+liuhantangtang_url: http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg
+liuhantutu_url: http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg
+baochaoaoao_url: http://image.hakubill.tech:1234/images/2022/07/04/IMG_2643.jpg
+waifu_list:
+  - name: 谷恒条野
+    url: http://image.hakubill.tech:1234/images/2022/07/20/Guhengtaiye.jpg
+    origin: 宅男的人间冒险 (Game, CN)
+  - name: 雪平一果
+    url: http://image.hakubill.tech:1234/images/2022/07/20/itsuka.png
+    origin: 相合之物 (Anime, JP)
+  - name: 平泽唯
+    url: http://image.hakubill.tech:1234/images/2022/07/20/yui.png
+    origin: 轻音少女 (Anime, JP)
+  - name: 白河萤
+    url: http://image.hakubill.tech:1234/images/2022/07/20/hotaru.png
+    origin: Memories Off 2nd (Game, JP)
+  - name: 老婆
+    url: http://image.hakubill.tech:1234/images/2022/07/20/Laopo.jpg
+    origin: 宅男的人间冒险 (Game, CN)
+  - name: 琴吹䌷
+    url: http://image.hakubill.tech:1234/images/2022/07/20/tsumugi.png
+    origin: 轻音少女 (Anime, JP)
+  - name: 中野梓
+    url: http://image.hakubill.tech:1234/images/2022/07/20/azusa.png
+    origin: 轻音少女 (Anime, JP)
+  - name: 凉宫春日
+    url: http://image.hakubill.tech:1234/images/2022/07/20/haruhi.png
+    origin: 凉宫春日的忧郁 (Anime/Novel, JP)
+  - name: 藤原千花
+    url: http://image.hakubill.tech:1234/images/2022/07/20/fujihara.png
+    origin: 辉夜大小姐想让我告白 (Anime/Comic, JP)
+  - name: 高木
+    url: http://image.hakubill.tech:1234/images/2022/07/20/takagi.jpg
+    origin: 擅长捉弄的高木同学 (Anime/Comic, JP)
+  - name: 花坂结衣
+    url: http://image.hakubill.tech:1234/images/2022/07/20/hanasaka_yui.png
+    origin: One Room (Anime, JP)
+  - name: 桃原奈月
+    url: http://image.hakubill.tech:1234/images/2022/07/20/momohara_natsuki.png
+    origin: One Room (Anime, JP)
+
+music_list:
+  - name: ハルノヒ
+  - artist: Tsubaki
+  - url: http://zhuaiyuwen.xyz/share/harunohi.mp3
+
+# Ayaki features
+unsei_list:
+  - ★★★大吉★★★
+  - ★★中吉★★
+  - ★小吉★
+  - 吉
+  - 末吉
+  - 凶
+  - 大凶

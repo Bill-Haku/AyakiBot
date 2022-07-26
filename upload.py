@@ -9,7 +9,7 @@ from PIL import Image
 from botpy.ext.cog_yaml import read
 
 sent_image_list = []
-config = read(os.path.join(os.path.dirname(__file__), "config.yaml"))
+private_config = read(os.path.join(os.path.dirname(__file__), "private_config.yaml"))
 
 
 def get_sent_image_list():
@@ -49,7 +49,7 @@ def _upload_pixiv_image():
     get_sent_image_list()
     # print(sent_image_list)
     pixiv_api = AppPixivAPI()
-    pixiv_api.auth(refresh_token=config["pixiv_refresh_token"])
+    pixiv_api.auth(refresh_token=private_config["pixiv_refresh_token"])
 
     pixiv_json_result = pixiv_api.illust_ranking('day')
     illusts = pixiv_json_result.illusts
