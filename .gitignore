@@ -138,12 +138,19 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# OS
 .DS_Store
-qqbot.log
+
+# IDE
+.idea/
+.vscode/
+
+# Ayaki
+*.log
 *.jpg
 *.png
 chromedriver
 *.csv
 test.py
-pixiv_src.bak
+*.bak
 private_config.yaml

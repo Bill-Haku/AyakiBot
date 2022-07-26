@@ -1,4 +1,3 @@
-import os
 import qqbot
 import botpy
 import time
@@ -18,17 +17,6 @@ token = qqbot.Token(appid, access_token)
 _log = logging.get_logger()
 
 
-class AyakiThread(Thread):
-    def __init__(self, threadID, name, delay):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.delay = delay
-
-    def run(self):
-        start_general_event_handler()
-
-
 class AyakiMoyuThread(Thread):
     def __init__(self, threadID, name, delay):
         threading.Thread.__init__(self)
@@ -38,16 +26,6 @@ class AyakiMoyuThread(Thread):
 
     def run(self):
         _moyu_handler(self.name)
-
-
-def TimeStampToTime(timestamp):
-    timeStruct = time.localtime(timestamp)
-    return time.strftime('%Y-%m-%d %H:%M:%S', timeStruct)
-
-
-def get_file_modified_time(filePath):
-    t = os.path.getmtime(filePath)
-    return TimeStampToTime(t)
 
 
 def send_moyu_cal():
@@ -109,7 +87,6 @@ class AyakiClient(botpy.Client):
             else:
                 return
 
-
         if "/hello" in message.content:
             _log.info(f"Recognized command hello")
             self.reply = self.handler.hello_handler(message=message)
@@ -169,6 +146,7 @@ class AyakiClient(botpy.Client):
                                         msg_id=message.id)
         self.reply.reset()
 
+
 def start_general_event_handler():
     _log.info("Start general event handler")
     intents = botpy.Intents(public_guild_messages=True)
@@ -185,11 +163,8 @@ if __name__ == '__main__':
     _log.info("Python version: %s" % platform.python_version())
 
     try:
-        # general_thread = AyakiThread(1, "general_thread", 1)
         moyu_thread = AyakiMoyuThread(2, "moyu_thread", 1)
-        # general_thread.start()
         moyu_thread.start()
-        # general_thread.join()
         start_general_event_handler()
         moyu_thread.join()
     except Exception as err:
