@@ -237,9 +237,9 @@ class AyakiFeaturesHandler:
         unsei = self.unsei_list[unsei_index]
         _log.info("Get unsei_index success: %s" % unsei_index)
         # 读取并获得宜忌事件列表
-        events_list = []
-        with open("events.txt", mode='r') as events_file:
-            events_list = events_file.readlines()
+        events_list = config["event_list"]
+        # with open("events.txt", mode='r') as events_file:
+        #     events_list = events_file.readlines()
         # 根据等级返回宜忌事件
         good = "宜："
         bad = "忌："
