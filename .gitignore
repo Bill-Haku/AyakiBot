@@ -145,8 +145,13 @@ cython_debug/
 .idea/
 .vscode/
 
-# Ayaki
-*.log
+# Ayaki Log
+botpy.log
+botpy.log.*
+qqbot.log
+qqbot.log.*
+
+# Ayaki Resource
 *.jpg
 *.png
 chromedriver
