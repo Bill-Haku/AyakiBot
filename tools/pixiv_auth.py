@@ -65,7 +65,7 @@ def login():
     caps = DesiredCapabilities.CHROME.copy()
     caps["goog:loggingPrefs"] = {"performance": "ALL"}  # enable performance logs
 
-    driver = webdriver.Chrome("./chromedriver", desired_capabilities=caps)
+    driver = webdriver.Chrome("../chromedriver", desired_capabilities=caps)
 
     code_verifier, code_challenge = oauth_pkce(s256)
     login_params = {
