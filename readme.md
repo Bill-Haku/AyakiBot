@@ -1,6 +1,6 @@
 # Ayaki
 
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Bill-Haku/Ayakibot?include_prereleases) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Bill-Haku/AyakiBot) ![GitHub issues](https://img.shields.io/github/issues/Bill-Haku/Ayakibot) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django) ![GitHub](https://img.shields.io/github/license/Bill-Haku/Ayakibot)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Bill-Haku/Ayakibot?include_prereleases) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Bill-Haku/AyakiBot) ![GitHub issues](https://img.shields.io/github/issues/Bill-Haku/Ayakibot) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django) ![GitHub](https://img.shields.io/github/license/Bill-Haku/Ayakibot) [![Python application](https://github.com/Bill-Haku/AyakiBot/actions/workflows/python-app.yml/badge.svg)](https://github.com/Bill-Haku/AyakiBot/actions/workflows/python-app.yml)
 
 ## 项目说明
 
