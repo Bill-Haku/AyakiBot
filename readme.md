@@ -260,7 +260,7 @@ Ayaki的头像是我使用AI画的。
 
 ## License 许可证
 
-本项目以[MIT协议](https://github.com/Bill-Haku/Ayakibot/LICENSE)授权许可开源。
+本项目以[MIT协议](https://github.com/Bill-Haku/AyakiBot/blob/master/LICENSE授权许可开源。
 
 © 2022 Bill Haku
 
