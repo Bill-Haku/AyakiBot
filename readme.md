@@ -12,7 +12,13 @@ Ayaki的头像是我使用AI画的。
 
 ![Ayaki-Watermark.png](http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png)
 
-## 更新记录&版本规划
+## 安装部署
+
+## 使用
+
+## 相关项目
+
+## 更新记录
 
 - 4.3.0-RC.1 - 2022.7.26 - Newest
 
@@ -252,4 +258,7 @@ Ayaki的头像是我使用AI画的。
 
     在群聊中at后可以回复“Hello”和简单的自我介绍
 
-    
+## License
+
+​    
+​    
