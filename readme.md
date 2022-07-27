@@ -1,8 +1,8 @@
 # Ayaki
 
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Bill-Haku/Ayakibot?include_prereleases) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Bill-Haku/AyakiBot) ![GitHub issues](https://img.shields.io/github/issues/Bill-Haku/Ayakibot) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Bill-Haku/Ayakibot?include_prereleases) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Bill-Haku/AyakiBot) ![GitHub issues](https://img.shields.io/github/issues/Bill-Haku/Ayakibot) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django) ![GitHub](https://img.shields.io/github/license/Bill-Haku/Ayakibot)
 
-## 说明
+## 项目说明
 
 Ayaki是我编写的一个QQ Bot。Ayaki是我给她取的名字，日语名あやき，没有对应的汉字。当然，如果你学过日语，你就能知道，这三个假名可以拼成很多汉字，你们可以叫她“彩木”，“绫纪”，“绫绮”等等。每个人心中都可以有属于自己的Ayaki。
 
@@ -258,7 +258,9 @@ Ayaki的头像是我使用AI画的。
 
     在群聊中at后可以回复“Hello”和简单的自我介绍
 
-## License
+## License 许可证
 
-​    
-​    
+本项目以[MIT协议](https://github.com/Bill-Haku/Ayakibot/LICENSE)授权许可开源。
+
+© 2022 Bill Haku
+
