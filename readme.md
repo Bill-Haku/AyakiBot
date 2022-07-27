@@ -1,5 +1,7 @@
 # Ayaki
 
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Bill-Haku/Ayakibot?include_prereleases) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Bill-Haku/AyakiBot) ![GitHub issues](https://img.shields.io/github/issues/Bill-Haku/Ayakibot) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django)
+
 ## 说明
 
 Ayaki是我编写的一个QQ Bot。Ayaki是我给她取的名字，日语名あやき，没有对应的汉字。当然，如果你学过日语，你就能知道，这三个假名可以拼成很多汉字，你们可以叫她“彩木”，“绫纪”，“绫绮”等等。每个人心中都可以有属于自己的Ayaki。
