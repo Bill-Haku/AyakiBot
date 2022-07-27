@@ -14,6 +14,52 @@ Ayaki的头像是我使用AI画的。
 
 ## 安装部署
 
+本程序是Python脚本，可以在任何安装了Python环境的服务器上运行。
+
+### 获取源代码
+
+你可以使用以下命令获取最新的源代码：
+
+```bash
+git clone https://github.com/Bill-Haku/AyakiBot.git
+```
+
+但我更加推荐你使用最新的发行版，这可能更加稳定：
+
+```bash
+git clone -b <tag name> https://github.com/Bill-Haku/AyakiBot.git
+```
+
+或者在[GitHub的Release页面](https://github.com/Bill-Haku/AyakiBot/releases)找到最新的发行版并下载源码后解压。
+
+### 安装依赖
+
+本程序使用到了腾讯官方提供的SDK和一些其他的库。在使用前，你可以使用以下命令安装本程序所需要的库。
+
+```bash
+cd AyakiBot
+pip install -r requirements.txt
+```
+
+### 部署代码
+
+如果你跟我一样，开发用的计算机并不是提供服务运行程序的服务器的话，你需要通过某种方式讲你的代码上传到服务器上。
+
+在`./tools/upload.sh`中，我提供了一个简易的脚本程序用于完成这一操作。该脚本使用`scp`的方式安全地传输文件。我建议你在使用前首先在服务器上配置好你的ssh公钥，以便该脚本运行。
+
+首先打开该脚本，将第3～7行中的内容修改为你的实际配置。然后运行以下命令：
+
+```bash
+cd tools
+./upload.sh
+```
+
+如果提示缺少运行权限，请执行以下命令后重新运行：
+
+```bash
+chmod 755 upload.sh
+```
+
 ## 使用
 
 ## 相关项目
