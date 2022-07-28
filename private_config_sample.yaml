@@ -18,5 +18,5 @@ admin_list:
 
 # Pixiv
 # 用于获取Pixiv日榜的相关鉴权ID
-pixiv_access_token: 2xohFPRY2kf16FOuUok9gD16abM2DXQWFXwcOcaB6qI
-pixiv_refresh_token: XlkWbEVUqVkS_zjpNb64LSD5wl7E-0CTaxmcziKp5rg
+pixiv_access_token: # Pixiv access token
+pixiv_refresh_token: # Pixiv refresh token
