@@ -115,6 +115,12 @@ Ayaki返回相关功能列表和说明。
 
 ## 相关项目
 
+- QQ频道机器人SDK：[tencent-connect/botpy](https://github.com/tencent-connect/botpy).
+
+- [QQ频道机器人API文档](https://bot.q.qq.com/wiki/develop/api/)
+- [QQ频道机器人Python SDK文档](https://bot.q.qq.com/wiki/develop/pythonsdk/)
+- Python Pixiv爬取库：[upbit/pixivpy](https://github.com/upbit/pixivpy)
+
 ## 更新记录
 
 - 4.3.0-RC.1 - 2022.7.26 - Newest
@@ -357,7 +363,7 @@ Ayaki返回相关功能列表和说明。
 
 ## License 许可证
 
-本项目以[MIT协议](https://github.com/Bill-Haku/AyakiBot/blob/master/LICENSE授权许可开源。
+本项目以[MIT协议](https://github.com/Bill-Haku/AyakiBot/blob/master/LICENSE)授权许可开源。
 
 © 2022 Bill Haku
 
