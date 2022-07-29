@@ -66,6 +66,10 @@ cd tools
 chmod 755 upload.sh
 ```
 
+### 关于二进制文件
+
+我使用[GitHub Actions](https://github.com/Bill-Haku/AyakiBot/actions)自动打包本程序的适用于macOS, Linux和Windows平台的二进制文件。但是这些二进制文件的可用性未经过测试。
+
 ## 使用
 
 ### 启动
@@ -115,7 +119,7 @@ Ayaki返回相关功能列表和说明。
 
 ## 相关项目
 
-- QQ频道机器人SDK：[tencent-connect/botpy](https://github.com/tencent-connect/botpy).
+- QQ频道机器人SDK：[tencent-connect/botpy](https://github.com/tencent-connect/botpy)
 
 - [QQ频道机器人API文档](https://bot.q.qq.com/wiki/develop/api/)
 - [QQ频道机器人Python SDK文档](https://bot.q.qq.com/wiki/develop/pythonsdk/)
@@ -123,7 +127,11 @@ Ayaki返回相关功能列表和说明。
 
 ## 更新记录
 
-- 4.3.0-RC.2 - 2022.7.28 - Newest
+- 4.3.0 - 2022.7.28 - Newest
+
+    修复了GitHub Actions中的若干问题。
+
+- 4.3.0-RC.2
 
     修复了`private_config_sample.yaml`中的错误
 
