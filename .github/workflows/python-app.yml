@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macOS-latest ]
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
 
     steps:
     - uses: actions/checkout@v3
@@ -44,13 +44,13 @@ jobs:
     - name: Build main(Windows)
       if: ${{ runner.os == 'Windows' }}
       run: |
-        pyinstaller ./main.py -p ./features.py
+        pyinstaller -F -w ./main.py -p ./features.py
         move dist\main.exe .\
 
     - name: Build main
       if: ${{ runner.os != 'Windows' }}
       run: |
-        pyinstaller ./main.py -p ./features.py
+        pyinstaller -F -w ./main.py -p ./features.py
         mv ./dist/main ./
 
     - name: Cleaning up build(Windows)
@@ -70,13 +70,13 @@ jobs:
       if: ${{ runner.os == 'Windows' }}
       run: |
         pyinstaller -F ./upload.py
-        move dist\tool.exe .\
+        move dist\upload.exe .\
 
     - name: Build upload
       if: ${{ runner.os != 'Windows' }}
       run: |
         pyinstaller -F ./upload.py
-        mv ./dist/tool ./
+        mv ./dist/upload ./
 
     - name: Cleaning up upload build(Windows)
       if: ${{ runner.os == 'Windows' }}
