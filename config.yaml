@@ -1,11 +1,13 @@
 # Ayaki General
-robot_version: 4.3.0-RC.1
+robot_version: 4.3.0-RC.3
 
 # Ayaki Source
 ayaki_logo_url: http://nas.hakubill.tech:1234/images/2022/02/27/Ayaki-Watermark.png
+# 表情包URL
 liuhantangtang_url: http://image.hakubill.tech:1234/images/2022/07/04/IMG_2641.jpg
 liuhantutu_url: http://image.hakubill.tech:1234/images/2022/07/04/IMG_2642.jpg
 baochaoaoao_url: http://image.hakubill.tech:1234/images/2022/07/04/IMG_2643.jpg
+# 老婆列表
 waifu_list:
   - name: 谷恒条野
     url: http://image.hakubill.tech:1234/images/2022/07/20/Guhengtaiye.jpg
@@ -44,12 +46,14 @@ waifu_list:
     url: http://image.hakubill.tech:1234/images/2022/07/20/momohara_natsuki.png
     origin: One Room (Anime, JP)
 
+# 音乐列表（暂时无用）
 music_list:
   - name: ハルノヒ
   - artist: Tsubaki
   - url: http://zhuaiyuwen.xyz/share/harunohi.mp3
 
 # Ayaki features
+# 运势列表
 unsei_list:
   - ★★★大吉★★★
   - ★★中吉★★
@@ -59,6 +63,7 @@ unsei_list:
   - 凶
   - 大凶
 
+# 宜忌事件列表
 event_list:
   - 摆烂
   - 宅家
