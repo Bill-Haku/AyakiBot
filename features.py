@@ -107,7 +107,7 @@ class AyakiFeaturesHandler:
         msg_reference = Reference(message_id=message.id)
         self.reply_message.message_reference = msg_reference
         return self.reply_message
-    
+
     def sese_handler(self, message: Message):
         # self.reply_message.content = "该功能暂时下线。详见频道全局公告。"
         # return self.reply_message
@@ -179,12 +179,12 @@ class AyakiFeaturesHandler:
 
     def help_handler(self, message: Message):
         self.reply_message.content = "欢迎使用Ayaki，以下是我的使用说明：\n" + \
-                                "我的主要功能是运势签到和发送一张涩涩图片。图片来自Pixiv日榜前30，图片每日更新通过转存到Bill的图库发送。" + \
-                                "图库在更新时，会自动筛选剔除已经发送过的和未被作者标记为插画类型的图片。以下是命令介绍：\n" + \
-                                "/hello：来跟我打个招呼吧。我会把我的一切都交给你的！\n " + \
-                                "/signin：别忘了每天在我这里打卡，同时会自动抽签，记得每天都来看看你的运势吧！\n " + \
-                                "/sese：涩涩！涩涩是人类进步的阶梯！要涩涩的话就来让我发一张涩图吧！（我自己才不给你看，哼！）\n" + \
-                                "/moyu：再次发送今天的摸鱼日历。人活着就是为了摸鱼。\n "
+                                     "我的主要功能是运势签到和发送一张涩涩图片。图片来自Pixiv日榜前30，图片每日更新通过转存到Bill的图库发送。" + \
+                                     "图库在更新时，会自动筛选剔除已经发送过的和未被作者标记为插画类型的图片。以下是命令介绍：\n" + \
+                                     "/hello：来跟我打个招呼吧。我会把我的一切都交给你的！\n " + \
+                                     "/signin：别忘了每天在我这里打卡，同时会自动抽签，记得每天都来看看你的运势吧！\n " + \
+                                     "/sese：涩涩！涩涩是人类进步的阶梯！要涩涩的话就来让我发一张涩图吧！（我自己才不给你看，哼！）\n" + \
+                                     "/moyu：再次发送今天的摸鱼日历。人活着就是为了摸鱼。\n "
         return self.reply_message
 
     def waifu_handler(self, message: Message):
@@ -227,6 +227,26 @@ class AyakiFeaturesHandler:
         content = tuling.json()
         _log.info(f"get reply: {content['content']}")
         self.reply_message.content = content['content'].replace('{br}', '\n')
+        return self.reply_message
+
+    def openai_handler(self, message: Message):
+        texts = message.content.split(' ')
+        text = texts[-1]
+        body = {
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "user", "content": text}]
+        }
+
+        url = "https://api.openai.com/v1/chat/completions"
+        openaiRequest = requests.post(url=url,
+                                      headers={"Authorization": "Bearer " + private_config["openai_key"],
+                                               "Content-Type": "application/json"},
+                                      json=body)
+        content = openaiRequest.json()
+        # _log.info(content)
+        result = content['choices'][0]['message']['content']
+        _log.info(f"Got reply: {result}")
+        self.reply_message.content = result.replace('\n\n', '')
         return self.reply_message
 
     # 签到请求处理，返回签到结果
@@ -347,7 +367,6 @@ class AyakiFeaturesHandler:
             #     ]
             # )
         _log.info("Get today' waifu success")
-
 
     def _get_seremain(self):
         cnt = 0

@@ -118,6 +118,10 @@ class AyakiClient(botpy.Client):
                 _log.info(f"Stop chat mode")
                 self.handler.chat_mode = False
                 self.reply.content = "聊天就到这吧。"
+        else:
+            # openai bot
+            _log.info(f"No command found, message = {message.content}")
+            self.reply = self.handler.openai_handler(message=message)
         if check_reply_sendable(self.reply):
             await self.post_message(message=message)
         else:
