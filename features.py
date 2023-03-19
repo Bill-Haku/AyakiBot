@@ -230,8 +230,9 @@ class AyakiFeaturesHandler:
         return self.reply_message
 
     def openai_handler(self, message: Message):
-        texts = message.content.split(' ')
-        text = texts[-1]
+        # texts = message.content.split(' ')
+        # text = texts[-1]
+        text = message.content.replace("<@!11379536499723901039> ", "")
         body = {
             "model": "gpt-3.5-turbo",
             "messages": [{"role": "user", "content": text}]
